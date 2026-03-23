@@ -46,12 +46,11 @@
   </div>
   
   <div class="action-buttons">
-    <a href="../TQM/index.html" class="btn btn-back">⬅ ย้อนกลับ</a>
+    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">⬅ ย้อนกลับ</a>
     <button onclick="closeLiff()" class="btn btn-close">✖ ปิดหน้าต่าง</button>
   </div>
 
   <script>
-    // 🛑 นำ URL ของเว็บแอป (GAS) อันเดียวกัน มาใส่ตรงนี้
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
 
@@ -65,7 +64,9 @@
 
     window.onload = function() {
       initLiff();
-      fetch(GAS_WEB_APP_URL + "?action=getLeaderboard")
+      
+      // 🛑 แก้ไขเพิ่ม { redirect: 'follow' } ป้องกันอาการโหลดค้าง
+      fetch(GAS_WEB_APP_URL + "?action=getLeaderboard", { redirect: 'follow' })
         .then(res => res.json())
         .then(res => {
           document.getElementById('loading').style.display = 'none';
