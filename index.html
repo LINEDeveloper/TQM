@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>บันทึกก้าวเดิน</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+  
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
-    :root { --primary: #1976D2; --bg-color: #E3F2FD; --card-bg: #FFFFFF; --text-main: #333; --text-sub: #666; }
-    body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; box-sizing: border-box; }
-    h2 { font-family: 'Kanit', sans-serif; text-align: center; color: var(--primary); margin: 0 0 5px 0; font-size: 26px;}
+    :root { --primary: #1976D2; --primary-dark: #1565C0; --bg-color: #E3F2FD; --card-bg: #FFFFFF; --text-main: #333; --text-sub: #666; }
+    body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .card { background: var(--card-bg); padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; box-sizing: border-box; }
+    h2 { font-family: 'Kanit', sans-serif; text-align: center; color: var(--primary); margin: 0 0 5px 0; font-size: 24px;}
     .app-desc { font-size: 13px; color: var(--text-sub); text-align: center; margin-bottom: 20px; background: #F0F4F8; padding: 12px; border-radius: 8px; line-height: 1.5; }
-    input { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-    input[type="file"] { padding: 10px; font-size: 14px; background: #f9f9f9; }
-    .input-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 5px; }
-    .sync-btn { width: 100%; padding: 14px; color: white; background-color: var(--primary); border: none; border-radius: 10px; font-size: 16px; font-weight: 600; font-family: 'Kanit', sans-serif; cursor: pointer; margin-top: 10px;}
-    .sync-btn:disabled { background-color: #ccc; }
+    
+    input { width: 100%; padding: 14px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: border 0.3s ease; }
+    input:focus { border: 2px solid var(--primary); outline: none; }
+    input[type="file"] { padding: 12px; font-size: 14px; background: #f9f9f9; }
+    .input-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 5px; text-align: left; }
+    
+    .sync-btn { width: 100%; padding: 15px; color: white; background-color: var(--primary); border: none; border-radius: 12px; font-size: 16px; font-weight: 600; font-family: 'Kanit', sans-serif; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(25,118,210,0.2); }
+    .sync-btn:disabled { background-color: #ccc; box-shadow: none; }
+    .btn-line { background-color: #00B900; box-shadow: 0 4px 10px rgba(0,185,0,0.3); }
+    .btn-close { background-color: #f1f3f4; color: #333; box-shadow: none; margin-top: 10px; }
+    
     #status-text { text-align: center; font-size: 14px; margin-top: 15px; font-weight: 600;}
     .logo-header { text-align: center; margin-bottom: 15px; }
-    .logo-header img { max-width: 130px; height: auto; }
+    .logo-header img { max-width: 120px; height: auto; }
+    
     .profile-container { text-align: center; margin-bottom: 20px; }
-    .profile-pic { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 15px rgba(25,118,210,0.3); background-color: #f0f0f0; display: none; margin: 0 auto 10px auto; }
-    .welcome-text { font-size: 16px; font-weight: 600; color: var(--text-main); }
+    .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 15px rgba(25,118,210,0.2); background-color: #f0f0f0; display: none; margin: 0 auto 10px auto; }
+    .welcome-text { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .welcome-name { color: var(--primary); font-size: 20px; font-family: 'Kanit', sans-serif; }
   </style>
 </head>
@@ -37,7 +47,7 @@
       <div id="welcome-text" class="welcome-text">กำลังตรวจสอบข้อมูล...</div>
     </div>
     
-    <button class="sync-btn" id="lineLoginBtn" onclick="liff.login()" style="display: none; background-color:#00B900;">เข้าสู่ระบบด้วย LINE</button>
+    <button class="sync-btn btn-line" id="lineLoginBtn" onclick="liff.login()" style="display: none;">เข้าสู่ระบบด้วย LINE</button>
 
     <div id="form-section" style="display: none;">
       <div id="register-section" style="display: none;">
@@ -48,6 +58,7 @@
       <input type="number" id="stepCount" placeholder="เช่น 8500" required>
       <label class="input-label">อัปโหลดรูปภาพหลักฐาน</label>
       <input type="file" id="proofImage" accept="image/*" required>
+      
       <button class="sync-btn" onclick="submitData()" id="syncBtn">ส่งหลักฐานและบันทึกก้าว</button>
       <div id="status-text"></div>
     </div>
@@ -55,12 +66,13 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="../Leaderboard/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none;">🏆 ดูอันดับความฟิต</a>
+      <a href="../Leaderboard/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <button class="sync-btn btn-close" onclick="closeLiff()">✖ ปิดหน้าต่าง</button>
     </div>
   </div>
 
   <script>
-    // 🛑 2. นำ URL ของเว็บแอป (GAS) มาใส่ตรงนี้
+    // 🛑 นำ URL ของเว็บแอป (GAS) มาใส่ตรงนี้
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
@@ -83,6 +95,10 @@
     }
     window.onload = main;
 
+    function closeLiff() {
+      if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
+    }
+
     async function checkUserInDatabase(uid) {
       try {
         const response = await fetch(GAS_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'checkUser', uid: uid }) });
@@ -93,16 +109,16 @@
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
-            document.getElementById('result-title').innerText = "ส่งข้อมูลของวันนี้แล้ว";
+            document.getElementById('result-title').innerText = "คุณส่งยอดของวันนี้แล้ว";
             document.getElementById('result-title').style.color = "#FF9800";
-            document.getElementById('step-result').innerHTML = `<div style="font-size:50px; margin:15px 0;">✅</div><div style="color:#666;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>`;
+            document.getElementById('step-result').innerHTML = `<div style="font-size:50px; margin:15px 0;">✅</div><div style="color:#666; font-size:14px;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>`;
           } else { document.getElementById('form-section').style.display = "block"; }
         } else {
           document.getElementById('welcome-text').innerHTML = `<span style="color:#FF6D00;">ลงทะเบียนใช้งานครั้งแรก</span>`;
           document.getElementById('form-section').style.display = "block";
           document.getElementById('register-section').style.display = "block"; 
         }
-      } catch (error) { document.getElementById('welcome-text').innerText = "เชื่อมต่อฐานข้อมูลล้มเหลว"; }
+      } catch (error) { document.getElementById('welcome-text').innerText = "กำลังเชื่อมต่อระบบ..."; }
     }
 
     function submitData() {
@@ -111,9 +127,15 @@
       const stepInput = document.getElementById('stepCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
-      if (!fName || !lName || !stepInput || fileInput.files.length === 0) return alert("กรุณากรอกข้อมูลให้ครบถ้วนครับ");
+      // ใช้ SweetAlert2 แจ้งเตือนแทน alert() ปกติ
+      if (!fName || !lName || !stepInput || fileInput.files.length === 0) {
+        return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกยอดก้าวและแนบรูปภาพให้ครบถ้วนครับ', confirmButtonColor: '#1976D2' });
+      }
+      
       const steps = parseInt(stepInput);
-      if (steps < 7000) return alert("⚠️ ยังไม่ถึงเกณฑ์ 7,000 ก้าว ระบบไม่สามารถบันทึกข้อมูลได้ครับ");
+      if (steps < 7000) {
+        return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว พยายามเดินให้ถึงแล้วมาส่งใหม่นะ ✌️', confirmButtonColor: '#FF9800' });
+      }
 
       document.getElementById('syncBtn').disabled = true;
       document.getElementById('status-text').style.color = "var(--primary)";
@@ -134,9 +156,14 @@
             document.getElementById("appDescription").style.display = "none";
             document.getElementById("result-section").style.display = "block";
             document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
-            document.getElementById("step-result").innerHTML = `<div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;"><div style="font-size:45px;">🏃‍♂️💨</div><div style="font-size:36px; font-weight:bold; color:#1976D2;">${res.steps.toLocaleString()} ก้าว</div></div><div style="color:#28a745; font-weight:600;">เยี่ยมเลย! ยอดคุณถึง 7,000 ก้าว!</div>`;
-          } else if (res.status === "already_submitted") { alert("วันนี้ส่งยอดก้าวเดินไปแล้วครับ"); window.location.reload(); }
-        }).catch(err => { alert("เกิดข้อผิดพลาด"); document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; });
+            document.getElementById("step-result").innerHTML = `<div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;"><div style="font-size:45px;">🏃‍♂️💨</div><div style="font-size:36px; font-weight:bold; color:#1976D2; font-family:'Kanit',sans-serif;">${res.steps.toLocaleString()} <span style="font-size:16px;font-weight:normal;">ก้าว</span></div></div><div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>`;
+          } else if (res.status === "already_submitted") { 
+            Swal.fire({ icon: 'info', title: 'ส่งไปแล้ว', text: 'วันนี้คุณส่งยอดก้าวเดินไปแล้วครับ', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
+          }
+        }).catch(err => { 
+          Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อล้มเหลว กรุณาลองใหม่', confirmButtonColor: '#d33' });
+          document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
+        });
       };
       reader.readAsDataURL(fileInput.files[0]);
     }
