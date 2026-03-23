@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ตารางอันดับความฟิต</title>
+  <title>ตารางอันดับความฟิต TQM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
   
@@ -12,9 +12,43 @@
     :root { --primary: #1976D2; --bg-color: #F0F4F8; --card-bg: #FFFFFF; }
     body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; -webkit-tap-highlight-color: transparent;}
     
-    .header-container { text-align: center; margin-bottom: 20px; width: 100%; max-width: 500px; }
-    .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: var(--primary); margin: 0; font-weight: 600; }
+    /* 🌟 1. CSS ดีไซน์ใหม่: กรอบตราเหรียญทองมุมมน พร้อมแสงทองปาด */
+    .leaderboard-header-badge {
+      position: relative; /* สำคัญ: สำหรับบอกตำแหน่งแสงปาด */
+      overflow: hidden; /* สำคัญ: สำหรับซ่อนแสงที่วิ่งเกินขอบ */
+      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); /* สีทองไล่ระดับพรีเมียม */
+      padding: 20px;
+      border-radius: 20px; /* กรอบมุมมนๆ */
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
+      text-align: center;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 25px rgba(243, 195, 0, 0.35); /* เงาสีทอง */
+    }
+
+    /* 🌟 2. CSS แอนิเมชันแสงวิ่งปาดสีทอง (ก๊อปปี้ logic มาจากหน้า submit) */
+    .leaderboard-header-badge::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+      animation: shineHeader 3.5s infinite; /* แสงวิ่งทุกๆ 3.5 วินาที */
+    }
+
+    @keyframes shineHeader {
+      0% { left: -100%; }
+      20% { left: 200%; }
+      100% { left: 200%; }
+    }
     
+    .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: #5C3A21; margin: 0; font-weight: 600; }
+    .header-sub { color:#785838; font-size: 14px; margin-top: 5px; font-weight: 500;}
+
     .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; }
     .list-container { list-style: none; padding: 0; margin: 0; }
     .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
@@ -35,9 +69,10 @@
   </style>
 </head>
 <body>
-  <div class="header-container">
+  
+  <div class="leaderboard-header-badge">
     <h1 class="header-title">🏆 Top 50 Leaderboard</h1>
-    <div style="color:#666; font-size: 14px; margin-top: 5px;">ตารางอันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
+    <div class="header-sub">ตารางอันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
   </div>
   
   <div class="leaderboard-card">
@@ -46,11 +81,12 @@
   </div>
   
   <div class="action-buttons">
-    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">ย้อนกลับ</a>
-    <button onclick="closeLiff()" class="btn btn-close">ปิดหน้าต่าง</button>
+    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">⬅ ย้อนกลับ</a>
+    <button onclick="closeLiff()" class="btn btn-close">✖ ปิดหน้าต่าง</button>
   </div>
 
   <script>
+    // 🛑 อย่าลืมนำ URL และ ID ของคุณมาใส่ตรงนี้นะครับ
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
 
@@ -64,8 +100,6 @@
 
     window.onload = function() {
       initLiff();
-      
-      // 🛑 แก้ไขเพิ่ม { redirect: 'follow' } ป้องกันอาการโหลดค้าง
       fetch(GAS_WEB_APP_URL + "?action=getLeaderboard", { redirect: 'follow' })
         .then(res => res.json())
         .then(res => {
