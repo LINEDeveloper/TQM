@@ -26,7 +26,6 @@
     .sync-btn:disabled { background-color: #ccc; box-shadow: none; cursor: not-allowed;}
     
     .btn-line { background-color: #00B900; box-shadow: 0 4px 10px rgba(0,185,0,0.3); }
-    /* สไตล์ปุ่มปิดหน้าต่างสไตล์ Native LINE */
     .btn-close { background-color: #f1f3f4; color: #333; box-shadow: none; margin-top: 10px; font-weight: 500; font-size: 14px;}
     
     #status-text { text-align: center; font-size: 14px; margin-top: 15px; font-weight: 600;}
@@ -69,13 +68,13 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
       <button class="sync-btn btn-close" onclick="closeLiff()">✖ ปิดหน้าต่าง</button>
     </div>
   </div>
 
   <script>
-    // 🛑 นำ URL ของเว็บแอป (GAS) มาใส่ตรงนี้
+    // 🛑 2. นำ URL ของเว็บแอป (GAS) "อันใหม่ล่าสุด" จากการ Deploy ใหม่ มาใส่ตรงนี้
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
@@ -98,18 +97,16 @@
     }
     window.onload = main;
 
-    // 🛑 อัปเกรด: ฟังก์ชันปิดหน้าต่าง LINE
     function closeLiff() {
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
     async function checkUserInDatabase(uid) {
       try {
-        // 🛑 อัปเกรด: เติม redirect และ Headers เพื่อป้องกัน Error CORS
         const response = await fetch(GAS_WEB_APP_URL, { 
           method: 'POST', 
-          redirect: 'follow', // <-- เพิ่มบรรทัดนี้
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // <-- เพิ่มบรรทัดนี้
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'checkUser', uid: uid }) 
         });
         const user = await response.json();
@@ -117,16 +114,28 @@
         if (user) {
           isRegistered = true; savedFirstName = user.firstName; savedLastName = user.lastName;
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>`;
+          
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
             document.getElementById('result-title').innerText = "คุณส่งยอดของวันนี้แล้ว";
             document.getElementById('result-title').style.color = "#FF9800";
-            // 🛑 จัดรูปแบบตัวหนังสือใหม่
-            document.getElementById('step-result').innerHTML = `<div style="font-size:50px; margin:15px 0;">✅</div><div style="color:#666; font-size:14px;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>`;
+            
+            // 🌟 นำกล่องโชว์ยอดก้าวสีฟ้ามาแสดงผล (ดึงตัวเลขมาจาก GAS)
+            let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "ไม่ระบุ";
+            
+            document.getElementById('step-result').innerHTML = `
+              <div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;">
+                <div style="font-size:45px; margin-bottom:5px;">🏃‍♂️💨</div>
+                <div style="font-size:14px; color:#666; margin-bottom:5px;">ยอดก้าววันนี้ของคุณ</div>
+                <div style="font-size:36px; font-weight:bold; color:#1976D2; font-family:'Kanit',sans-serif; line-height: 1;">
+                  ${displaySteps} <span style="font-size:16px;font-weight:normal;">ก้าว</span>
+                </div>
+              </div>
+              <div style="color:#666; font-size:14px; margin-bottom: 10px;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
+            `;
           } else { document.getElementById('form-section').style.display = "block"; }
         } else {
-          // 🛑 แก้ไข: เปลี่ยนสีฟอนต์จากสีส้มเป็นสีเขียว (#28a745)
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
           document.getElementById('form-section').style.display = "block";
           document.getElementById('register-section').style.display = "block"; 
@@ -140,7 +149,6 @@
       const stepInput = document.getElementById('stepCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
-      // ใช้ SweetAlert2 แจ้งเตือนแทน alert() ปกติ
       if (!fName || !lName || !stepInput || fileInput.files.length === 0) {
         return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกยอดก้าวและแนบรูปภาพให้ครบถ้วนครับ', confirmButtonColor: '#1976D2' });
       }
@@ -158,7 +166,6 @@
       const reader = new FileReader();
 
       reader.onload = function(e) {
-        // ดึงเฉพาะส่วน Base64 ของรูปภาพ
         const base64Data = e.target.result.split(',')[1]; 
         
         const payload = {
@@ -166,11 +173,10 @@
           pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
         };
 
-        // 🛑 อัปเกรด: เติม redirect และ Headers เพื่อป้องกัน Error CORS
         fetch(GAS_WEB_APP_URL, { 
           method: 'POST', 
-          redirect: 'follow', // <-- เพิ่มบรรทัดนี้
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // <-- เพิ่มบรรทัดนี้
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload) 
         })
         .then(res => res.json())
@@ -180,7 +186,6 @@
             document.getElementById("appDescription").style.display = "none";
             document.getElementById("result-section").style.display = "block";
             document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
-            // 🛑 จัดรูปแบบยอดก้าวตัวใหญ่ๆ สวยงามสไตล์ Mobile App
             document.getElementById("step-result").innerHTML = `<div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;"><div style="font-size:45px; margin-bottom:5px;">🏃‍♂️💨</div><div style="font-size:36px; font-weight:bold; color:#1976D2; font-family:'Kanit',sans-serif; line-height: 1;">${res.steps.toLocaleString()} <span style="font-size:16px;font-weight:normal;">ก้าว</span></div></div><div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>`;
           } else if (res.status === "already_submitted") { 
             Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
@@ -190,7 +195,6 @@
           document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
         });
       };
-      // อ่านไฟล์รูปภาพในรูปแบบ Data URL
       reader.readAsDataURL(file);
     }
   </script>
