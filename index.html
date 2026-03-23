@@ -40,7 +40,7 @@
     .footer { text-align: center; font-size: 13px; color: var(--text-sub); margin-top: 25px; line-height: 1.6; }
     .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
 
-    /* 🌟 1. เพิ่มสไตล์ CSS สำหรับกรอบแจ้งเตือนข้อมูลไม่ครบ (ธีมฟ้า มนๆ) */
+    /* 🌟 สไตล์ CSS สำหรับกรอบแจ้งเตือนข้อมูลไม่ครบ (ธีมฟ้า มนๆ) */
     .blue-theme-popup {
         border-radius: 20px !important; /* มนพิเศษ */
         padding: 1.5rem !important;
@@ -95,8 +95,8 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
-      <button class="sync-btn btn-close" onclick="closeLiff()">ปิดหน้าต่าง</button>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <button class="sync-btn btn-close" onclick="closeLiff()">✖ ปิดหน้าต่าง</button>
     </div>
   </div>
 
@@ -179,7 +179,7 @@
       const stepInput = document.getElementById('stepCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
-      // 🌟 2. ปรับปรุง: ใช้ Custom Class เฉพาะกรณีข้อมูลไม่ครบ (ธีมฟ้า มนๆ)
+      // 🌟 ใช้ Custom Class เฉพาะกรณีข้อมูลไม่ครบ (ธีมฟ้า มนๆ)
       if (!fName || !lName || !stepInput || fileInput.files.length === 0) {
         return Swal.fire({ 
           icon: 'warning', 
@@ -197,52 +197,72 @@
       }
       
       const steps = parseInt(stepInput);
-      // ส่วนนี้ใช้ธีมมาตรฐานเหมือนเดิมตามประกาศ
+      // ส่วนเตือนยอดไม่ถึง 7000 (ธีมมาตรฐาน)
       if (steps < 7000) {
         return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว พยายามเดินให้ถึงเป้าหมายแล้วมาส่งใหม่นะ ✌️', confirmButtonColor: '#FF9800' });
       }
 
-      document.getElementById('syncBtn').disabled = true;
-      document.getElementById('status-text').style.color = "var(--primary)";
-      document.getElementById('status-text').innerText = "⏳ กำลังอัปโหลดข้อมูล...";
+      // 🌟 เพิ่มป๊อปอัปแจ้งเตือนให้กดยืนยัน (Disclaimer)
+      Swal.fire({
+        title: 'ยืนยันการส่งข้อมูล',
+        html: '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#1976D2',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ยืนยันการส่ง',
+        cancelButtonText: 'ยกเลิก',
+        reverseButtons: true, // สลับให้ปุ่มยืนยันอยู่ด้านขวา
+        customClass: {
+              popup: 'blue-theme-popup',
+              title: 'blue-theme-title',
+              confirmButton: 'blue-theme-confirm-btn',
+              cancelButton: 'blue-theme-confirm-btn'
+        }
+      }).then((result) => {
+        // ถ้ายืนยัน ค่อยเริ่มทำการบันทึกข้อมูล
+        if (result.isConfirmed) {
+            document.getElementById('syncBtn').disabled = true;
+            document.getElementById('status-text').style.color = "var(--primary)";
+            document.getElementById('status-text').innerText = "⏳ กำลังอัปโหลดรูปภาพและบันทึกข้อมูล...";
 
-      const file = fileInput.files[0];
-      const reader = new FileReader();
+            const file = fileInput.files[0];
+            const reader = new FileReader();
 
-      reader.onload = function(e) {
-        const base64Data = e.target.result.split(',')[1]; 
-        
-        const payload = {
-          action: 'submitSteps', uid: lineUserId, firstName: fName, lastName: lName, steps: steps,
-          pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
-        };
+            reader.onload = function(e) {
+                const base64Data = e.target.result.split(',')[1]; 
+                
+                const payload = {
+                action: 'submitSteps', uid: lineUserId, firstName: fName, lastName: lName, steps: steps,
+                pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
+                };
 
-        fetch(GAS_WEB_APP_URL, { 
-          method: 'POST', 
-          redirect: 'follow',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload) 
-        })
-        .then(res => res.json())
-        .then(res => {
-          if (res.status === "success") {
-            document.getElementById("form-section").style.display = "none";
-            document.getElementById("appDescription").style.display = "none";
-            document.getElementById("result-section").style.display = "block";
-            document.getElementById("main-title").innerText = "บันทึกข้อมูลสำเร็จ";
-            document.getElementById("step-result").innerHTML = `<div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;"><div style="font-size:45px; margin-bottom:5px;">🏃‍♂️💨</div><div style="font-size:36px; font-weight:bold; color:#1976D2; font-family:'Kanit',sans-serif; line-height: 1;">${res.steps.toLocaleString()} <span style="font-size:16px;font-weight:normal;">ก้าว</span></div></div><div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>`;
-          } 
-          // ส่วนนี้ใช้ธีมมาตรฐานเหมือนเดิมตามประกาศ
-          else if (res.status === "already_submitted") { 
-            Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
-          }
-        }).catch(err => { 
-          // ส่วนนี้ใช้ธีมมาตรฐานเหมือนเดิมตามประกาศ
-          Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว กรุณาลองใหม่', confirmButtonColor: '#d33' });
-          document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
-        });
-      };
-      reader.readAsDataURL(file);
+                fetch(GAS_WEB_APP_URL, { 
+                method: 'POST', 
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload) 
+                })
+                .then(res => res.json())
+                .then(res => {
+                if (res.status === "success") {
+                    document.getElementById("form-section").style.display = "none";
+                    document.getElementById("appDescription").style.display = "none";
+                    document.getElementById("result-section").style.display = "block";
+                    document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
+                    document.getElementById("step-result").innerHTML = `<div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;"><div style="font-size:45px; margin-bottom:5px;">🏃‍♂️💨</div><div style="font-size:36px; font-weight:bold; color:#1976D2; font-family:'Kanit',sans-serif; line-height: 1;">${res.steps.toLocaleString()} <span style="font-size:16px;font-weight:normal;">ก้าว</span></div></div><div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>`;
+                } 
+                else if (res.status === "already_submitted") { 
+                    Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
+                }
+                }).catch(err => { 
+                Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว กรุณาลองใหม่', confirmButtonColor: '#d33' });
+                document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+      });
     }
   </script>
 </body>
