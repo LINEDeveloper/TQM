@@ -45,6 +45,31 @@
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
     .blue-theme-content { font-family: 'Sarabun', sans-serif !important; color: #555 !important; font-size: 15px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
+
+    /* 🌟 สไตล์ปุ่มสีทองพร้อมแอนิเมชันแสงปาด */
+    .btn-gold-shine {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); /* ไล่สีทองพรีเมียม */
+      color: #5C3A21 !important; /* ตัวหนังสือสีน้ำตาลเข้มให้ตัดกับสีทอง */
+      box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4);
+    }
+    .btn-gold-shine::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+      animation: shine 3s infinite; /* แสงวิ่งทุกๆ 3 วินาที */
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 200%; }
+      100% { left: 200%; }
+    }
   </style>
 </head>
 <body>
@@ -77,7 +102,8 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <button class="sync-btn btn-close" onclick="closeLiff()">ปิดหน้าต่าง</button>
     </div>
   </div>
 
@@ -87,7 +113,6 @@
   </div>
 
   <script>
-    // 🛑 อย่าลืมนำ URL อันใหม่ล่าสุดมาใส่ตรงนี้นะครับ
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
@@ -135,9 +160,8 @@
             document.getElementById('result-title').style.color = "#FF9800";
             
             let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "0";
-            let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; // 🌟 ดึงยอดรวมมาแสดง
+            let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; 
             
-            // 🌟 กล่องยอดก้าวสีฟ้า + แถบยอดสะสมรวม (กรณีส่งแล้ว)
             document.getElementById('step-result').innerHTML = `
               <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
                 <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
@@ -238,9 +262,8 @@
                     document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
                     
                     let displaySteps = res.steps ? res.steps.toLocaleString() : "0";
-                    let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; // 🌟 ดึงยอดรวมมาแสดง
+                    let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; 
                     
-                    // 🌟 กล่องยอดก้าวสีฟ้า + แถบยอดสะสมรวม (กรณีส่งสำเร็จสดๆ ร้อนๆ)
                     document.getElementById("step-result").innerHTML = `
                       <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
                         <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
