@@ -41,28 +41,10 @@
     .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
 
     /* สไตล์ CSS สำหรับกรอบแจ้งเตือนข้อมูลไม่ครบ (ธีมฟ้า มนๆ) */
-    .blue-theme-popup {
-        border-radius: 20px !important; 
-        padding: 1.5rem !important;
-        background-color: #F0F8FF !important; 
-        font-family: 'Sarabun', sans-serif !important;
-    }
-    .blue-theme-title {
-        font-family: 'Kanit', sans-serif !important;
-        color: #1976D2 !important; 
-        font-weight: 600 !important;
-        font-size: 22px !important;
-    }
-    .blue-theme-content {
-        font-family: 'Sarabun', sans-serif !important;
-        color: #555 !important;
-        font-size: 15px !important;
-    }
-    .blue-theme-confirm-btn {
-        border-radius: 10px !important; 
-        font-family: 'Kanit', sans-serif !important;
-        padding: 12px 24px !important;
-    }
+    .blue-theme-popup { border-radius: 20px !important; padding: 1.5rem !important; background-color: #F0F8FF !important; font-family: 'Sarabun', sans-serif !important; }
+    .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
+    .blue-theme-content { font-family: 'Sarabun', sans-serif !important; color: #555 !important; font-size: 15px !important; }
+    .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
   </style>
 </head>
 <body>
@@ -95,7 +77,7 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
       <button class="sync-btn btn-close" onclick="closeLiff()">ปิดหน้าต่าง</button>
     </div>
   </div>
@@ -106,6 +88,7 @@
   </div>
 
   <script>
+    // 🛑 อย่าลืมนำ URL อันใหม่ล่าสุดมาใส่ตรงนี้นะครับ
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
@@ -152,15 +135,22 @@
             document.getElementById('result-title').innerText = "คุณส่งยอดของวันนี้แล้ว";
             document.getElementById('result-title').style.color = "#FF9800";
             
-            let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "ไม่ระบุ";
+            let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "0";
+            let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; // 🌟 ดึงยอดรวมมาแสดง
             
-            // 🌟 กล่องยอดก้าวสีฟ้า (Gradient) เมื่อเข้ามาซ้ำ
+            // 🌟 กล่องยอดก้าวสีฟ้า + แถบยอดสะสมรวม (กรณีส่งแล้ว)
             document.getElementById('step-result').innerHTML = `
               <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
                 <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
                 <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
-                <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
+                <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
                   ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 12px; margin-top: 10px;">
+                  <div style="font-size: 13px; color: #E3F2FD; margin-bottom: 2px;">ยอดก้าวสะสมรวมทั้งหมด</div>
+                  <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
+                    ${displayTotal} <span style="font-size: 14px; font-weight: normal;">ก้าว</span>
+                  </div>
                 </div>
               </div>
               <div style="color:#666; font-size:14px; margin-bottom: 10px;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
@@ -248,13 +238,22 @@
                     document.getElementById("result-section").style.display = "block";
                     document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
                     
-                    // 🌟 กล่องยอดก้าวสีฟ้า (Gradient) เมื่อบันทึกสำเร็จ
+                    let displaySteps = res.steps ? res.steps.toLocaleString() : "0";
+                    let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; // 🌟 ดึงยอดรวมมาแสดง
+                    
+                    // 🌟 กล่องยอดก้าวสีฟ้า + แถบยอดสะสมรวม (กรณีส่งสำเร็จสดๆ ร้อนๆ)
                     document.getElementById("step-result").innerHTML = `
                       <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
                         <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
                         <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
-                        <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
-                          ${res.steps.toLocaleString()} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
+                        <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
+                          ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 12px; margin-top: 10px;">
+                          <div style="font-size: 13px; color: #E3F2FD; margin-bottom: 2px;">ยอดก้าวสะสมรวมทั้งหมด</div>
+                          <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
+                            ${displayTotal} <span style="font-size: 14px; font-weight: normal;">ก้าว</span>
+                          </div>
                         </div>
                       </div>
                       <div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>
