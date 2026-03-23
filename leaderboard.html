@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ตารางอันดับความฟิต</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+  
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    :root { --primary: #1976D2; --bg-color: #F0F4F8; --card-bg: #FFFFFF; }
+    body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; -webkit-tap-highlight-color: transparent;}
+    
+    .header-container { text-align: center; margin-bottom: 20px; width: 100%; max-width: 500px; }
+    .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: var(--primary); margin: 0; font-weight: 600; }
+    
+    .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; }
+    .list-container { list-style: none; padding: 0; margin: 0; }
+    .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
+    
+    .rank-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; background-color: #E3F2FD; color: var(--primary); margin-right: 12px; flex-shrink: 0;}
+    .rank-1 .rank-circle { background: linear-gradient(135deg, #FFD700, #FDB931); color: white; font-size: 16px;}
+    .rank-2 .rank-circle { background: linear-gradient(135deg, #E0E0E0, #9E9E9E); color: white; }
+    .rank-3 .rank-circle { background: linear-gradient(135deg, #FFB07C, #FF7A59); color: white; }
+    
+    .profile-pic { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #E3F2FD; margin-right: 12px; flex-shrink: 0;}
+    .user-name { font-weight: 600; font-size: 15px; color: #333; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;}
+    .step-count { font-weight: 600; font-size: 16px; color: var(--primary); font-family: 'Kanit', sans-serif; text-align: right; flex-shrink: 0;}
+    
+    .action-buttons { width: 100%; max-width: 500px; display: flex; gap: 10px; }
+    .btn { flex: 1; padding: 14px; text-align: center; border-radius: 12px; text-decoration: none; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; border: none; }
+    .btn-back { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(25, 118, 210, 0.2); }
+    .btn-close { background: #E0E0E0; color: #333; }
+  </style>
+</head>
+<body>
+  <div class="header-container">
+    <h1 class="header-title">🏆 Top 50 Leaderboard</h1>
+    <div style="color:#666; font-size: 14px; margin-top: 5px;">ตารางอันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
+  </div>
+  
+  <div class="leaderboard-card">
+    <div id="loading" style="text-align:center; padding:50px; color:#1976D2; font-family: 'Kanit', sans-serif;">กำลังประมวลผลอันดับ...</div>
+    <ul class="list-container" id="leaderboardList" style="display: none;"></ul>
+  </div>
+  
+  <div class="action-buttons">
+    <a href="../TQM/index.html" class="btn btn-back">⬅ ย้อนกลับ</a>
+    <button onclick="closeLiff()" class="btn btn-close">✖ ปิดหน้าต่าง</button>
+  </div>
+
+  <script>
+    // 🛑 นำ URL ของเว็บแอป (GAS) อันเดียวกัน มาใส่ตรงนี้
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
+    const LIFF_ID = '2009549576-6bsF9G5Z'; 
+
+    async function initLiff() {
+      try { await liff.init({ liffId: LIFF_ID }); } catch (err) { console.log(err); }
+    }
+    
+    function closeLiff() {
+      if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
+    }
+
+    window.onload = function() {
+      initLiff();
+      fetch(GAS_WEB_APP_URL + "?action=getLeaderboard")
+        .then(res => res.json())
+        .then(res => {
+          document.getElementById('loading').style.display = 'none';
+          if (res.status === "success" && res.data.length > 0) {
+            const listElement = document.getElementById('leaderboardList');
+            listElement.style.display = 'block';
+            res.data.forEach((user, index) => {
+              const rank = index + 1;
+              let rankClass = rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : "";
+              let rankIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank;
+              
+              const li = document.createElement('li');
+              li.className = `list-item ${rankClass}`;
+              li.innerHTML = `<div class="rank-circle">${rankIcon}</div><img src="${user.picUrl}" class="profile-pic" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'"><div class="user-name">${user.firstName} ${user.lastName}</div><div class="step-count">${user.totalSteps.toLocaleString()} ก้าว</div>`;
+              listElement.appendChild(li);
+            });
+          } else { document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; document.getElementById('loading').style.display = 'block'; }
+        }).catch(err => document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล");
+    }
+  </script>
+</body>
+</html>
