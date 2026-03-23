@@ -37,9 +37,32 @@
     .welcome-text { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .welcome-name { color: var(--primary); font-size: 20px; font-family: 'Kanit', sans-serif; }
     
-    /* 🌟 เพิ่มสไตล์สำหรับ Footer */
     .footer { text-align: center; font-size: 13px; color: var(--text-sub); margin-top: 25px; line-height: 1.6; }
     .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    /* 🌟 1. เพิ่มสไตล์ CSS สำหรับกรอบแจ้งเตือนข้อมูลไม่ครบ (ธีมฟ้า มนๆ) */
+    .blue-theme-popup {
+        border-radius: 20px !important; /* มนพิเศษ */
+        padding: 1.5rem !important;
+        background-color: #F0F8FF !important; /* ฟ้าอ่อนมาก */
+        font-family: 'Sarabun', sans-serif !important;
+    }
+    .blue-theme-title {
+        font-family: 'Kanit', sans-serif !important;
+        color: #1976D2 !important; /* หัวข้อสีฟ้า */
+        font-weight: 600 !important;
+        font-size: 22px !important;
+    }
+    .blue-theme-content {
+        font-family: 'Sarabun', sans-serif !important;
+        color: #555 !important;
+        font-size: 15px !important;
+    }
+    .blue-theme-confirm-btn {
+        border-radius: 10px !important; /* ปุ่มมน */
+        font-family: 'Kanit', sans-serif !important;
+        padding: 12px 24px !important;
+    }
   </style>
 </head>
 <body>
@@ -72,16 +95,17 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
-      <button class="sync-btn btn-close" onclick="closeLiff()">✖ ปิดหน้าต่าง</button>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <button class="sync-btn btn-close" onclick="closeLiff()">ปิดหน้าต่าง</button>
     </div>
-  </div> <div class="footer">
-    บริษัท ทีคิวเอ็ม อัลฟา จำกัด (มหาชน) <br>
+  </div>
+
+  <div class="footer">
+    บริษัท ทีคิวเอ็ม อัลฟา จำกัด (มหาชน)<br>
     <a href="privacy.html" target="_blank">นโยบายความเป็นส่วนตัว (Privacy Policy)</a>
   </div>
 
   <script>
-    // 🛑 2. นำ URL ของเว็บแอป (GAS) "อันใหม่ล่าสุด" จากการ Deploy ใหม่ มาใส่ตรงนี้
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
@@ -128,7 +152,6 @@
             document.getElementById('result-title').innerText = "คุณส่งยอดของวันนี้แล้ว";
             document.getElementById('result-title').style.color = "#FF9800";
             
-            // 🌟 นำกล่องโชว์ยอดก้าวสีฟ้ามาแสดงผล (ดึงตัวเลขมาจาก GAS)
             let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "ไม่ระบุ";
             
             document.getElementById('step-result').innerHTML = `
@@ -156,18 +179,32 @@
       const stepInput = document.getElementById('stepCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
+      // 🌟 2. ปรับปรุง: ใช้ Custom Class เฉพาะกรณีข้อมูลไม่ครบ (ธีมฟ้า มนๆ)
       if (!fName || !lName || !stepInput || fileInput.files.length === 0) {
-        return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกยอดก้าวและแนบรูปภาพให้ครบถ้วนครับ', confirmButtonColor: '#1976D2' });
+        return Swal.fire({ 
+          icon: 'warning', 
+          title: 'ข้อมูลไม่ครบ', 
+          text: 'กรุณากรอกยอดก้าวและแนบรูปภาพให้ครบถ้วนครับ', 
+          confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#1976D2',
+          customClass: {
+              popup: 'blue-theme-popup',
+              title: 'blue-theme-title',
+              htmlContainer: 'blue-theme-content',
+              confirmButton: 'blue-theme-confirm-btn'
+          }
+        });
       }
       
       const steps = parseInt(stepInput);
+      // ส่วนนี้ใช้ธีมมาตรฐานเหมือนเดิมตามประกาศ
       if (steps < 7000) {
         return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว พยายามเดินให้ถึงเป้าหมายแล้วมาส่งใหม่นะ ✌️', confirmButtonColor: '#FF9800' });
       }
 
       document.getElementById('syncBtn').disabled = true;
       document.getElementById('status-text').style.color = "var(--primary)";
-      document.getElementById('status-text').innerText = "⏳ กำลังอัปโหลดรูปภาพและบันทึกข้อมูล...";
+      document.getElementById('status-text').innerText = "⏳ กำลังอัปโหลดข้อมูล...";
 
       const file = fileInput.files[0];
       const reader = new FileReader();
@@ -192,12 +229,15 @@
             document.getElementById("form-section").style.display = "none";
             document.getElementById("appDescription").style.display = "none";
             document.getElementById("result-section").style.display = "block";
-            document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
+            document.getElementById("main-title").innerText = "บันทึกข้อมูลสำเร็จ";
             document.getElementById("step-result").innerHTML = `<div style="background:#F4F9FF; border:2px dashed #1976D2; padding:20px; border-radius:15px; margin:15px 0;"><div style="font-size:45px; margin-bottom:5px;">🏃‍♂️💨</div><div style="font-size:36px; font-weight:bold; color:#1976D2; font-family:'Kanit',sans-serif; line-height: 1;">${res.steps.toLocaleString()} <span style="font-size:16px;font-weight:normal;">ก้าว</span></div></div><div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>`;
-          } else if (res.status === "already_submitted") { 
+          } 
+          // ส่วนนี้ใช้ธีมมาตรฐานเหมือนเดิมตามประกาศ
+          else if (res.status === "already_submitted") { 
             Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
           }
         }).catch(err => { 
+          // ส่วนนี้ใช้ธีมมาตรฐานเหมือนเดิมตามประกาศ
           Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว กรุณาลองใหม่', confirmButtonColor: '#d33' });
           document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
         });
