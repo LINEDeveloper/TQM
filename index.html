@@ -40,33 +40,23 @@
     .footer { text-align: center; font-size: 13px; color: var(--text-sub); margin-top: 25px; line-height: 1.6; }
     .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
 
-    /* สไตล์ CSS สำหรับกรอบแจ้งเตือนข้อมูลไม่ครบ (ธีมฟ้า มนๆ) */
     .blue-theme-popup { border-radius: 20px !important; padding: 1.5rem !important; background-color: #F0F8FF !important; font-family: 'Sarabun', sans-serif !important; }
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
     .blue-theme-content { font-family: 'Sarabun', sans-serif !important; color: #555 !important; font-size: 15px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
 
-    /* สไตล์ปุ่มสีทองพร้อมแอนิเมชันแสงปาด */
     .btn-gold-shine {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
-      color: #5C3A21 !important; 
-      box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4);
+      position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
+      color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4);
     }
     .btn-gold-shine::after {
-      content: "";
-      position: absolute;
-      top: 0; left: -100%; width: 50%; height: 100%;
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
       background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg);
-      animation: shine 3s infinite; 
+      transform: skewX(-25deg); animation: shine 3s infinite; 
     }
-    @keyframes shine {
-      0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
-    }
+    @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-    /* สไตล์สำหรับกล่องสีฟ้าแสดงผลแบบมีลายพื้นหลังจางๆ ( step-result-card ) */
+    /* สไตล์สำหรับกล่องสีฟ้า */
     .step-result-card {
       background-color: #1976D2; 
       background-image:
@@ -75,12 +65,11 @@
       background-repeat: repeat, no-repeat;
       background-size: auto, cover;
       border: none;
-      padding: 25px 20px;
+      padding: 25px 15px;
       border-radius: 20px;
       margin: 15px 0;
       box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
       position: relative;
-      text-align: center;
     }
   </style>
 </head>
@@ -159,11 +148,53 @@
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
+    // ฟังก์ชันสร้าง UI กล่องสีฟ้า ให้ดูคลีนและแสดงข้อมูลครบ
+    function buildResultHTML(steps, cal, totalSteps, totalCal, submitTime) {
+      let displaySteps = steps ? steps.toLocaleString() : "0";
+      let displayCal = cal ? parseFloat(cal).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
+      let displayTotalSteps = totalSteps ? totalSteps.toLocaleString() : "0";
+      let displayTotalCal = totalCal ? parseFloat(totalCal).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
+      let timeHtml = submitTime ? `<div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center; font-weight: 300;">อัปเดตล่าสุด: ${submitTime} น.</div>` : "";
+
+      return `
+        <div class="step-result-card">
+          <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 15px; font-weight: 500; text-align: center;">สรุปผลการเดินวันนี้</div>
+          <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 5px;">
+            <div style="text-align: center; width: 45%;">
+              <div style="font-size: 32px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displaySteps}</div>
+              <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">👣 ก้าวเดิน</div>
+            </div>
+            <div style="width: 1px; height: 40px; background-color: rgba(255,255,255,0.3);"></div>
+            <div style="text-align: center; width: 45%;">
+              <div style="font-size: 32px; font-weight: bold; color: #FFD54F; font-family: 'Kanit', sans-serif; line-height: 1;">${displayCal}</div>
+              <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">🔥 กิโลแคลอรี่</div>
+            </div>
+          </div>
+          ${timeHtml}
+
+          <div style="background: rgba(255, 255, 255, 0.15); padding: 15px; border-radius: 12px; margin-top: 15px;">
+            <div style="font-size: 13px; color: #FFFFFF; margin-bottom: 12px; font-weight: 500; text-align: center;">🏆 ยอดสะสมรวมทั้งหมด</div>
+            <div style="display: flex; justify-content: space-around; align-items: center;">
+              <div style="text-align: center; width: 45%;">
+                <div style="font-size: 20px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displayTotalSteps}</div>
+                <div style="font-size: 12px; color: #E3F2FD; margin-top: 4px;">รวมก้าวเดิน</div>
+              </div>
+              <div style="width: 1px; height: 30px; background-color: rgba(255,255,255,0.2);"></div>
+              <div style="text-align: center; width: 45%;">
+                <div style="font-size: 20px; font-weight: bold; color: #FFD54F; font-family: 'Kanit', sans-serif; line-height: 1;">${displayTotalCal}</div>
+                <div style="font-size: 12px; color: #E3F2FD; margin-top: 4px;">รวมกิโลแคลอรี่</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="color:#666; font-size:14px; margin-bottom: 15px;">บันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
+      `;
+    }
+
     async function checkUserInDatabase(uid) {
       try {
         const response = await fetch(GAS_WEB_APP_URL, { 
-          method: 'POST', 
-          redirect: 'follow',
+          method: 'POST', redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'checkUser', uid: uid }) 
         });
@@ -177,28 +208,10 @@
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
             
-            let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "0";
-            let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; 
-            let submitTime = user.submitTime ? user.submitTime : ""; 
-            
-            let timeHtml = submitTime ? `<div style="font-size: 13px; color: #E3F2FD; margin-top: -5px; margin-bottom: 15px; font-weight: 300;">อัปเดตล่าสุดเมื่อเวลา: ${submitTime} น.</div>` : "";
-
-            document.getElementById('step-result').innerHTML = `
-              <div class="step-result-card">
-                <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
-                <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 10px;">
-                  ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
-                </div>
-                ${timeHtml}
-                <div style="background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 12px; margin-top: 10px;">
-                  <div style="font-size: 13px; color: #E3F2FD; margin-bottom: 2px;">ยอดก้าวสะสมรวมทั้งหมด</div>
-                  <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
-                    ${displayTotal} <span style="font-size: 14px; font-weight: normal;">ก้าว</span>
-                  </div>
-                </div>
-              </div>
-              <div style="color:#666; font-size:14px; margin-bottom: 15px;">บันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
-            `;
+            // เรียกใช้ฟังก์ชันวาด UI
+            document.getElementById('step-result').innerHTML = buildResultHTML(
+              user.todaySteps, user.todayCalories, user.totalSteps, user.totalCalories, user.submitTime
+            );
           } else { document.getElementById('form-section').style.display = "block"; }
         } else {
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
@@ -209,39 +222,23 @@
     }
 
     function submitData() {
-      // ดึงข้อมูลกรณีลงทะเบียนครั้งแรก
       let fName = isRegistered ? savedFirstName : document.getElementById('firstName').value.trim();
       let lName = isRegistered ? savedLastName : document.getElementById('lastName').value.trim();
       let weightVal = isRegistered ? "" : document.getElementById('weight').value.trim();
       let heightVal = isRegistered ? "" : document.getElementById('height').value.trim();
-
-      // ดึงข้อมูลที่ต้องส่งทุกวัน
       const stepInput = document.getElementById('stepCount').value.trim();
       const caloriesInput = document.getElementById('caloriesCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
-      // ตรวจสอบความครบถ้วนของข้อมูล
       let isMissingData = false;
-      if (!fName || !lName || !stepInput || !caloriesInput || fileInput.files.length === 0) {
-        isMissingData = true;
-      }
-      if (!isRegistered && (!weightVal || !heightVal)) {
-        isMissingData = true;
-      }
+      if (!fName || !lName || !stepInput || !caloriesInput || fileInput.files.length === 0) isMissingData = true;
+      if (!isRegistered && (!weightVal || !heightVal)) isMissingData = true;
 
       if (isMissingData) {
         return Swal.fire({ 
-          icon: 'warning', 
-          title: 'ข้อมูลไม่ครบ', 
-          text: 'กรุณากรอกข้อมูลและแนบรูปภาพให้ครบถ้วนทุกช่องครับ', 
-          confirmButtonText: 'ตกลง',
-          confirmButtonColor: '#1976D2',
-          customClass: {
-              popup: 'blue-theme-popup',
-              title: 'blue-theme-title',
-              htmlContainer: 'blue-theme-content',
-              confirmButton: 'blue-theme-confirm-btn'
-          }
+          icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลและแนบรูปภาพให้ครบถ้วนทุกช่องครับ', 
+          confirmButtonText: 'ตกลง', confirmButtonColor: '#1976D2',
+          customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', htmlContainer: 'blue-theme-content', confirmButton: 'blue-theme-confirm-btn' }
         });
       }
       
@@ -253,19 +250,8 @@
       Swal.fire({
         title: 'ยืนยันการส่งข้อมูล',
         html: '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>',
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#1976D2',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'ยืนยันการส่ง',
-        cancelButtonText: 'ยกเลิก',
-        reverseButtons: true, 
-        customClass: {
-              popup: 'blue-theme-popup',
-              title: 'blue-theme-title',
-              confirmButton: 'blue-theme-confirm-btn',
-              cancelButton: 'blue-theme-confirm-btn'
-        }
+        icon: 'info', showCancelButton: true, confirmButtonColor: '#1976D2', cancelButtonColor: '#d33', confirmButtonText: 'ยืนยันการส่ง', cancelButtonText: 'ยกเลิก', reverseButtons: true, 
+        customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', confirmButton: 'blue-theme-confirm-btn', cancelButton: 'blue-theme-confirm-btn' }
       }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('syncBtn').disabled = true;
@@ -279,30 +265,17 @@
                 const base64Data = e.target.result.split(',')[1]; 
                 
                 const payload = {
-                action: 'submitSteps', 
-                uid: lineUserId, 
-                firstName: fName, 
-                lastName: lName, 
-                weight: weightVal,      // ข้อมูลน้ำหนัก
-                height: heightVal,      // ข้อมูลส่วนสูง
-                steps: steps,
-                calories: caloriesInput, // ข้อมูลแคลอรี่
-                pictureUrl: savedPicUrl, 
-                imageFile: base64Data, 
-                mimeType: file.type, 
-                fileName: lineUserId + "_" + Date.now() + "_" + file.name 
+                  action: 'submitSteps', uid: lineUserId, firstName: fName, lastName: lName, 
+                  weight: weightVal, height: heightVal, steps: steps, calories: caloriesInput, 
+                  pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
                 };
 
                 fetch(GAS_WEB_APP_URL, { 
-                method: 'POST', 
-                redirect: 'follow',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload) 
+                  method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) 
                 })
                 .then(res => res.json())
                 .then(res => {
                 if (res.status === "success") {
-                    // เปลี่ยน UI ให้พร้อมแสดงผล
                     document.getElementById("form-section").style.display = "none";
                     document.getElementById("appDescription").style.display = "none";
                     document.getElementById("result-section").style.display = "block";
@@ -314,40 +287,13 @@
                     document.getElementById("result-title").style.color = "var(--primary)";
                     document.getElementById("result-title").style.fontSize = "24px";
                     
-                    let displaySteps = res.steps ? res.steps.toLocaleString() : "0";
-                    let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; 
-                    
-                    document.getElementById("step-result").innerHTML = `
-                      <div class="step-result-card">
-                        <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
-                        <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
-                          ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
-                        </div>
-                        <div style="background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 12px; margin-top: 10px;">
-                          <div style="font-size: 13px; color: #E3F2FD; margin-bottom: 2px;">ยอดก้าวสะสมรวมทั้งหมด</div>
-                          <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
-                            ${displayTotal} <span style="font-size: 14px; font-weight: normal;">ก้าว</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div style="color:#28a745; font-weight:600; font-size:16px; margin-bottom: 15px;">ยอดคุณถึง 7,000 ก้าว!</div>
-                    `;
+                    // เรียกใช้ฟังก์ชันวาด UI (ไม่มีเวลา เพราะเพิ่งส่งสดๆ)
+                    document.getElementById("step-result").innerHTML = buildResultHTML(
+                      res.steps, res.calories, res.totalSteps, res.totalCalories, ""
+                    );
 
-                    // เคลียร์สถานะข้อความกำลังโหลด
                     document.getElementById('status-text').innerText = "";
-
-                    // สั่งแสดง Pop-up สีเขียวแบบตั้งเวลาปิดเอง
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'บันทึกสำเร็จ',
-                      showConfirmButton: false,
-                      timer: 2000,
-                      customClass: {
-                        popup: 'blue-theme-popup',
-                        title: 'blue-theme-title'
-                      }
-                    });
-
+                    Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000, customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title' } });
                 } 
                 else if (res.status === "already_submitted") { 
                     Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ บันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
