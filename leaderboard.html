@@ -2,9 +2,9 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>อันดับความฟิต</title>
+  <title>อันดับความฟิต TQM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
   
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
@@ -43,12 +43,12 @@
 
     .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; padding-bottom: 10px;}
     
-    /* สไตล์โพเดียม 3 มิติ (Top 3) */
+    /* สไตล์โพเดียม 3 มิติ (Top 3) แบบคลีนและหรูหรา */
     .podium-container {
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 5px;
+      gap: 6px;
       margin: 40px 10px 20px 10px;
       padding-bottom: 15px;
       border-bottom: 2px dashed #E3F2FD;
@@ -64,18 +64,19 @@
     .podium-item.rank-2 { order: 1; } 
     .podium-item.rank-3 { order: 3; } 
 
-    .podium-avatar { position: relative; margin-bottom: 10px; }
+    .podium-avatar { position: relative; margin-bottom: 12px; }
     .podium-avatar img {
       width: 60px; height: 60px;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* เงานุ่มขึ้น */
       background: #fff;
       border: 3px solid;
+      padding: 2px; /* เพิ่มขอบขาวด้านในให้ดูคลีน */
     }
-    .rank-1 .podium-avatar img { width: 85px; height: 85px; border-color: #FFD700; border-width: 4px; }
-    .rank-2 .podium-avatar img { border-color: #C0C0C0; }
-    .rank-3 .podium-avatar img { border-color: #CD7F32; }
+    .rank-1 .podium-avatar img { width: 85px; height: 85px; border-color: #F59E0B; }
+    .rank-2 .podium-avatar img { border-color: #94A3B8; }
+    .rank-3 .podium-avatar img { border-color: #EA580C; }
 
     /* มงกุฎลอยได้สำหรับแชมป์ */
     .rank-1 .podium-avatar::before {
@@ -84,7 +85,7 @@
       top: -30px; left: 50%;
       transform: translateX(-50%);
       font-size: 32px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
       z-index: 10;
       animation: floatCrown 2s infinite ease-in-out;
     }
@@ -95,42 +96,54 @@
 
     .podium-medal {
       position: absolute;
-      bottom: -10px; left: 50%;
+      bottom: -12px; left: 50%;
       transform: translateX(-50%);
-      font-size: 26px;
-      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+      font-size: 24px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); /* เงาเหรียญนุ่มลง */
     }
-    .rank-1 .podium-medal { font-size: 36px; bottom: -15px; }
+    .rank-1 .podium-medal { font-size: 34px; bottom: -18px; }
 
-    .podium-info { text-align: center; margin-bottom: 10px; width: 100%; padding: 0 5px; box-sizing: border-box;}
+    .podium-info { text-align: center; margin-bottom: 12px; width: 100%; padding: 0 5px; box-sizing: border-box;}
     .podium-name {
-      font-size: 13px; font-weight: 600; color: #333;
+      font-size: 13px; font-weight: 600; color: #444; /* สีเทาเข้มดูแพงกว่าสีดำสนิท */
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .podium-steps {
-      font-size: 15px; font-weight: bold; color: #1976D2; font-family: 'Kanit', sans-serif;
+      font-size: 15px; font-weight: 600; color: #1976D2; font-family: 'Kanit', sans-serif;
     }
     .rank-1 .podium-steps { font-size: 17px; color: #D4AF37; }
 
-    /* กล่องแท่นยืน 3 มิติ */
+    /* 🌟 ปรับกล่องแท่นยืน 3 มิติ ใหม่ให้คลีนและหรูหรา */
     .podium-block {
       width: 100%;
-      border-radius: 12px 12px 0 0;
+      border-radius: 16px 16px 0 0; /* มุมมนสมูทขึ้น */
       display: flex; justify-content: center; align-items: flex-start;
-      padding-top: 15px;
-      color: white; font-family: 'Kanit', sans-serif; font-size: 28px; font-weight: bold;
-      text-shadow: 1px 2px 4px rgba(0,0,0,0.3);
-      box-shadow: inset 0px 5px 15px rgba(255,255,255,0.5), inset 0px -10px 20px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.25);
-      position: relative; overflow: hidden;
-    }
-    .podium-block::before {
-      content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
+      padding-top: 12px;
+      color: rgba(255, 255, 255, 0.95); 
+      font-family: 'Kanit', sans-serif; 
+      font-size: 36px; /* ตัวเลขใหญ่ขึ้นแต่ดูโปร่ง */
+      font-weight: 500; /* ลดความหนาของตัวอักษรลง */
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06); /* เงาลอยๆ นุ่มๆ */
+      position: relative; 
+      border-top: 2px solid rgba(255,255,255,0.6); /* ขอบแสงด้านบน */
     }
 
-    .rank-1 .podium-block { height: 130px; background: linear-gradient(180deg, #FFD700, #DAA520, #B8860B); }
-    .rank-2 .podium-block { height: 95px; background: linear-gradient(180deg, #E0E0E0, #BDBDBD, #9E9E9E); color: #555; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);}
-    .rank-3 .podium-block { height: 75px; background: linear-gradient(180deg, #FFB07C, #E67E22, #D2691E); }
+    /* ไล่สีพาสเทลเมทัลลิคสไตล์หรู */
+    .rank-1 .podium-block { 
+      height: 140px; 
+      background: linear-gradient(135deg, #FDE047, #F59E0B); 
+      text-shadow: 0 2px 10px rgba(245, 158, 11, 0.6); /* เรืองแสงสีทอง */
+    }
+    .rank-2 .podium-block { 
+      height: 100px; 
+      background: linear-gradient(135deg, #E2E8F0, #94A3B8); 
+      text-shadow: 0 2px 10px rgba(148, 163, 184, 0.6); /* เรืองแสงสีเงิน */
+    }
+    .rank-3 .podium-block { 
+      height: 80px; 
+      background: linear-gradient(135deg, #FDBA74, #EA580C); 
+      text-shadow: 0 2px 10px rgba(234, 88, 12, 0.6); /* เรืองแสงสีทองแดง */
+    }
 
     /* รายชื่ออันดับที่ 4 เป็นต้นไป */
     .list-container { list-style: none; padding: 0; margin: 0; }
@@ -140,7 +153,7 @@
     
     .rank-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; background-color: #E3F2FD; color: var(--primary); margin-right: 12px; flex-shrink: 0;}
     .profile-pic { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #E3F2FD; margin-right: 12px; flex-shrink: 0;}
-    .user-name { font-weight: 600; font-size: 15px; color: #333; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;}
+    .user-name { font-weight: 500; font-size: 15px; color: #444; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;}
     .step-count { font-weight: 600; font-size: 16px; color: var(--primary); font-family: 'Kanit', sans-serif; text-align: right; flex-shrink: 0;}
     
     .action-buttons { width: 100%; max-width: 500px; display: flex; gap: 10px; }
@@ -148,7 +161,6 @@
     .btn-back { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(25, 118, 210, 0.2); }
     .btn-close { background: #E0E0E0; color: #333; }
 
-    /* 🌟 เพิ่มสไตล์ Footer ให้ตรงกับหน้าหลัก */
     .footer { text-align: center; font-size: 13px; color: #666; margin-top: 25px; line-height: 1.6; padding-bottom: 10px; }
     .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
   </style>
@@ -157,7 +169,7 @@
   
   <div class="leaderboard-header-badge">
     <h1 class="header-title">🏆 Top 50 Leaderboard</h1>
-    <div class="header-sub">ตารางอันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
+    <div class="header-sub">อันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
   </div>
   
   <div class="leaderboard-card">
@@ -169,8 +181,8 @@
   </div>
   
   <div class="action-buttons">
-    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">⬅ ย้อนกลับ</a>
-    <button onclick="closeLiff()" class="btn btn-close">✖ ปิดหน้าต่าง</button>
+    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">ย้อนกลับ</a>
+    <button onclick="closeLiff()" class="btn btn-close">ปิดหน้าต่าง</button>
   </div>
 
   <div class="footer">
@@ -190,7 +202,6 @@
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
-    // ฟังก์ชันช่วยสร้าง HTML สำหรับโพเดียม 3 มิติ
     function createPodiumHTML(user, rank) {
       let medalIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
       
@@ -218,30 +229,27 @@
           
           if (res.status === "success" && res.data.length > 0) {
             
-            // แยกข้อมูล 3 อันดับแรก และ อันดับที่เหลือ
             const top3 = res.data.slice(0, 3);
             const restOfUsers = res.data.slice(3);
 
-            // เรนเดอร์ส่วน โพเดียม (Top 3)
             const podiumContainer = document.getElementById('podium-container');
             if(top3.length > 0) {
               podiumContainer.style.display = 'flex';
               let podiumHTML = '';
               
-              if(top3[1]) podiumHTML += createPodiumHTML(top3[1], 2); // ซ้าย (ที่ 2)
-              if(top3[0]) podiumHTML += createPodiumHTML(top3[0], 1); // กลาง (ที่ 1)
-              if(top3[2]) podiumHTML += createPodiumHTML(top3[2], 3); // ขวา (ที่ 3)
+              if(top3[1]) podiumHTML += createPodiumHTML(top3[1], 2); 
+              if(top3[0]) podiumHTML += createPodiumHTML(top3[0], 1); 
+              if(top3[2]) podiumHTML += createPodiumHTML(top3[2], 3); 
 
               podiumContainer.innerHTML = podiumHTML;
             }
 
-            // เรนเดอร์ส่วน รายชื่อปกติ (อันดับ 4 เป็นต้นไป)
             if(restOfUsers.length > 0) {
               const listElement = document.getElementById('leaderboardList');
               listElement.style.display = 'block';
               
               restOfUsers.forEach((user, index) => {
-                const rank = index + 4; // เริ่มนับต่อจากอันดับที่ 3
+                const rank = index + 4; 
                 
                 const li = document.createElement('li');
                 li.className = `list-item`;
