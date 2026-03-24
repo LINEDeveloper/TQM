@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Unlock 7K</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
   
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -46,29 +46,24 @@
     .blue-theme-content { font-family: 'Sarabun', sans-serif !important; color: #555 !important; font-size: 15px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
 
-    /* 🌟 สไตล์ปุ่มสีทองพร้อมแอนิเมชันแสงปาด */
+    /* สไตล์ปุ่มสีทองพร้อมแอนิเมชันแสงปาด */
     .btn-gold-shine {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); /* ไล่สีทองพรีเมียม */
-      color: #5C3A21 !important; /* ตัวหนังสือสีน้ำตาลเข้มให้ตัดกับสีทอง */
+      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
+      color: #5C3A21 !important; 
       box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4);
     }
     .btn-gold-shine::after {
       content: "";
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
+      top: 0; left: -100%; width: 50%; height: 100%;
       background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
       transform: skewX(-25deg);
-      animation: shine 3s infinite; /* แสงวิ่งทุกๆ 3 วินาที */
+      animation: shine 3s infinite; 
     }
     @keyframes shine {
-      0% { left: -100%; }
-      20% { left: 200%; }
-      100% { left: 200%; }
+      0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
     }
   </style>
 </head>
@@ -100,9 +95,10 @@
     </div>
 
     <div id="result-section" style="display: none; text-align: center;">
-      <h3 id="result-title"></h3>
+      <h3 id="result-title" style="font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;">คุณอัพเดทข้อมูลก้าวแล้ววันนี้</h3>
+      <div id="submit-time" style="font-size: 14px; color: #888; margin-bottom: 15px;"></div>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
     </div>
   </div>
 
@@ -155,12 +151,16 @@
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
-            document.getElementById('result-title').innerText = "คุณส่งยอดของวันนี้แล้ว";
-            document.getElementById('result-title').style.color = "#FF9800";
             
             let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "0";
             let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; 
+            let submitTime = user.submitTime ? user.submitTime : ""; // ดึงเวลาจาก GAS
             
+            // แสดงเวลาที่อัปเดต
+            if (submitTime) {
+              document.getElementById('submit-time').innerText = `อัปเดตล่าสุดเมื่อเวลา: ${submitTime} น.`;
+            }
+
             document.getElementById('step-result').innerHTML = `
               <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
                 <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
@@ -175,7 +175,7 @@
                   </div>
                 </div>
               </div>
-              <div style="color:#666; font-size:14px; margin-bottom: 10px;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
+              <div style="color:#666; font-size:14px; margin-bottom: 15px;">ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
             `;
           } else { document.getElementById('form-section').style.display = "block"; }
         } else {
@@ -258,7 +258,14 @@
                     document.getElementById("form-section").style.display = "none";
                     document.getElementById("appDescription").style.display = "none";
                     document.getElementById("result-section").style.display = "block";
-                    document.getElementById("main-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
+                    
+                    // เปลี่ยน Title เป็นแบบสำเร็จสำหรับส่งครั้งแรก
+                    document.getElementById("result-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
+                    document.getElementById("result-title").style.fontFamily = "'Kanit', sans-serif";
+                    document.getElementById("result-title").style.fontWeight = "600";
+                    document.getElementById("result-title").style.color = "var(--primary)";
+                    document.getElementById("result-title").style.fontSize = "24px";
+                    document.getElementById('submit-time').style.display = "none"; // ไม่ต้องโชว์เวลาตรงนี้
                     
                     let displaySteps = res.steps ? res.steps.toLocaleString() : "0";
                     let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; 
@@ -277,7 +284,7 @@
                           </div>
                         </div>
                       </div>
-                      <div style="color:#28a745; font-weight:600; font-size:16px;">ยอดคุณถึง 7,000 ก้าว!</div>
+                      <div style="color:#28a745; font-weight:600; font-size:16px; margin-bottom: 15px;">ยอดคุณถึง 7,000 ก้าว!</div>
                     `;
                 } 
                 else if (res.status === "already_submitted") { 
