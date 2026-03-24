@@ -95,8 +95,7 @@
     </div>
 
     <div id="result-section" style="display: none; text-align: center;">
-      <h3 id="result-title" style="font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;">คุณอัพเดทข้อมูลก้าวแล้ววันนี้</h3>
-      <div id="submit-time" style="font-size: 14px; color: #888; margin-bottom: 15px;"></div>
+      <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
       <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
     </div>
@@ -154,20 +153,18 @@
             
             let displaySteps = user.todaySteps ? user.todaySteps.toLocaleString() : "0";
             let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; 
-            let submitTime = user.submitTime ? user.submitTime : ""; // ดึงเวลาจาก GAS
+            let submitTime = user.submitTime ? user.submitTime : ""; 
             
-            // แสดงเวลาที่อัปเดต
-            if (submitTime) {
-              document.getElementById('submit-time').innerText = `อัปเดตล่าสุดเมื่อเวลา: ${submitTime} น.`;
-            }
+            // เตรียมข้อความแสดงเวลา ถ้ามีข้อมูล
+            let timeHtml = submitTime ? `<div style="font-size: 13px; color: #E3F2FD; margin-top: -5px; margin-bottom: 15px; font-weight: 300;">อัปเดตล่าสุดเมื่อเวลา: ${submitTime} น.</div>` : "";
 
             document.getElementById('step-result').innerHTML = `
               <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
-                <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
                 <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
-                <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
+                <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 10px;">
                   ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
                 </div>
+                ${timeHtml}
                 <div style="background: rgba(255, 255, 255, 0.15); padding: 10px; border-radius: 12px; margin-top: 10px;">
                   <div style="font-size: 13px; color: #E3F2FD; margin-bottom: 2px;">ยอดก้าวสะสมรวมทั้งหมด</div>
                   <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">
@@ -259,20 +256,19 @@
                     document.getElementById("appDescription").style.display = "none";
                     document.getElementById("result-section").style.display = "block";
                     
-                    // เปลี่ยน Title เป็นแบบสำเร็จสำหรับส่งครั้งแรก
+                    // แสดง Title แบบสำเร็จสำหรับส่งครั้งแรก
+                    document.getElementById("result-title").style.display = "block";
                     document.getElementById("result-title").innerText = "🎉 บันทึกข้อมูลสำเร็จ";
                     document.getElementById("result-title").style.fontFamily = "'Kanit', sans-serif";
                     document.getElementById("result-title").style.fontWeight = "600";
                     document.getElementById("result-title").style.color = "var(--primary)";
                     document.getElementById("result-title").style.fontSize = "24px";
-                    document.getElementById('submit-time').style.display = "none"; // ไม่ต้องโชว์เวลาตรงนี้
                     
                     let displaySteps = res.steps ? res.steps.toLocaleString() : "0";
                     let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; 
                     
                     document.getElementById("step-result").innerHTML = `
                       <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
-                        <div style="font-size: 45px; margin-bottom: 5px;">🏃‍♂️💨</div>
                         <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
                         <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
                           ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
