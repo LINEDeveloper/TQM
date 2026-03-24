@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ตารางอันดับความฟิต TQM</title>
+  <title>อันดับความฟิต</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
   
@@ -12,52 +12,133 @@
     :root { --primary: #1976D2; --bg-color: #F0F4F8; --card-bg: #FFFFFF; }
     body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; -webkit-tap-highlight-color: transparent;}
     
-    /* 🌟 1. CSS ดีไซน์ใหม่: กรอบตราเหรียญทองมุมมน พร้อมแสงทองปาด */
+    /* กรอบตราเหรียญทองมุมมน พร้อมแสงทองปาด */
     .leaderboard-header-badge {
-      position: relative; /* สำคัญ: สำหรับบอกตำแหน่งแสงปาด */
-      overflow: hidden; /* สำคัญ: สำหรับซ่อนแสงที่วิ่งเกินขอบ */
-      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); /* สีทองไล่ระดับพรีเมียม */
+      position: relative; 
+      overflow: hidden; 
+      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
       padding: 20px;
-      border-radius: 20px; /* กรอบมุมมนๆ */
+      border-radius: 20px; 
       width: 100%;
       max-width: 500px;
       box-sizing: border-box;
       text-align: center;
       margin-bottom: 25px;
-      box-shadow: 0 8px 25px rgba(243, 195, 0, 0.35); /* เงาสีทอง */
+      box-shadow: 0 8px 25px rgba(243, 195, 0, 0.35); 
     }
-
-    /* 🌟 2. CSS แอนิเมชันแสงวิ่งปาดสีทอง (ก๊อปปี้ logic มาจากหน้า submit) */
     .leaderboard-header-badge::after {
       content: "";
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
+      top: 0; left: -100%; width: 50%; height: 100%;
       background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
       transform: skewX(-25deg);
-      animation: shineHeader 3.5s infinite; /* แสงวิ่งทุกๆ 3.5 วินาที */
+      animation: shineHeader 3.5s infinite; 
     }
-
     @keyframes shineHeader {
-      0% { left: -100%; }
-      20% { left: 200%; }
-      100% { left: 200%; }
+      0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
     }
     
-    .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: #5C3A21; margin: 0; font-weight: 600; }
+    .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: #5C3A21; margin: 0; font-weight: 600; text-shadow: 0 1px 2px rgba(255,255,255,0.5);}
     .header-sub { color:#785838; font-size: 14px; margin-top: 5px; font-weight: 500;}
 
-    .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; }
+    .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; padding-bottom: 10px;}
+    
+    /* สไตล์โพเดียม 3 มิติ (Top 3) */
+    .podium-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 5px;
+      margin: 40px 10px 20px 10px;
+      padding-bottom: 15px;
+      border-bottom: 2px dashed #E3F2FD;
+    }
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 32%;
+      position: relative;
+    }
+    .podium-item.rank-1 { order: 2; z-index: 10; margin-bottom: 15px; } 
+    .podium-item.rank-2 { order: 1; } 
+    .podium-item.rank-3 { order: 3; } 
+
+    .podium-avatar { position: relative; margin-bottom: 10px; }
+    .podium-avatar img {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      background: #fff;
+      border: 3px solid;
+    }
+    .rank-1 .podium-avatar img { width: 85px; height: 85px; border-color: #FFD700; border-width: 4px; }
+    .rank-2 .podium-avatar img { border-color: #C0C0C0; }
+    .rank-3 .podium-avatar img { border-color: #CD7F32; }
+
+    /* มงกุฎลอยได้สำหรับแชมป์ */
+    .rank-1 .podium-avatar::before {
+      content: "👑";
+      position: absolute;
+      top: -30px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 32px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      z-index: 10;
+      animation: floatCrown 2s infinite ease-in-out;
+    }
+    @keyframes floatCrown {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -8px); }
+    }
+
+    .podium-medal {
+      position: absolute;
+      bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 26px;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+    }
+    .rank-1 .podium-medal { font-size: 36px; bottom: -15px; }
+
+    .podium-info { text-align: center; margin-bottom: 10px; width: 100%; padding: 0 5px; box-sizing: border-box;}
+    .podium-name {
+      font-size: 13px; font-weight: 600; color: #333;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .podium-steps {
+      font-size: 15px; font-weight: bold; color: #1976D2; font-family: 'Kanit', sans-serif;
+    }
+    .rank-1 .podium-steps { font-size: 17px; color: #D4AF37; }
+
+    /* กล่องแท่นยืน 3 มิติ */
+    .podium-block {
+      width: 100%;
+      border-radius: 12px 12px 0 0;
+      display: flex; justify-content: center; align-items: flex-start;
+      padding-top: 15px;
+      color: white; font-family: 'Kanit', sans-serif; font-size: 28px; font-weight: bold;
+      text-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+      box-shadow: inset 0px 5px 15px rgba(255,255,255,0.5), inset 0px -10px 20px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.25);
+      position: relative; overflow: hidden;
+    }
+    .podium-block::before {
+      content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .rank-1 .podium-block { height: 130px; background: linear-gradient(180deg, #FFD700, #DAA520, #B8860B); }
+    .rank-2 .podium-block { height: 95px; background: linear-gradient(180deg, #E0E0E0, #BDBDBD, #9E9E9E); color: #555; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);}
+    .rank-3 .podium-block { height: 75px; background: linear-gradient(180deg, #FFB07C, #E67E22, #D2691E); }
+
+    /* รายชื่ออันดับที่ 4 เป็นต้นไป */
     .list-container { list-style: none; padding: 0; margin: 0; }
-    .list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; }
+    .list-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; transition: background 0.3s;}
+    .list-item:hover { background: #F8F9FA; }
+    .list-item:last-child { border-bottom: none; }
     
     .rank-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; background-color: #E3F2FD; color: var(--primary); margin-right: 12px; flex-shrink: 0;}
-    .rank-1 .rank-circle { background: linear-gradient(135deg, #FFD700, #FDB931); color: white; font-size: 16px;}
-    .rank-2 .rank-circle { background: linear-gradient(135deg, #E0E0E0, #9E9E9E); color: white; }
-    .rank-3 .rank-circle { background: linear-gradient(135deg, #FFB07C, #FF7A59); color: white; }
-    
     .profile-pic { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #E3F2FD; margin-right: 12px; flex-shrink: 0;}
     .user-name { font-weight: 600; font-size: 15px; color: #333; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;}
     .step-count { font-weight: 600; font-size: 16px; color: var(--primary); font-family: 'Kanit', sans-serif; text-align: right; flex-shrink: 0;}
@@ -66,6 +147,10 @@
     .btn { flex: 1; padding: 14px; text-align: center; border-radius: 12px; text-decoration: none; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; border: none; }
     .btn-back { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(25, 118, 210, 0.2); }
     .btn-close { background: #E0E0E0; color: #333; }
+
+    /* 🌟 เพิ่มสไตล์ Footer ให้ตรงกับหน้าหลัก */
+    .footer { text-align: center; font-size: 13px; color: #666; margin-top: 25px; line-height: 1.6; padding-bottom: 10px; }
+    .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -77,16 +162,23 @@
   
   <div class="leaderboard-card">
     <div id="loading" style="text-align:center; padding:50px; color:#1976D2; font-family: 'Kanit', sans-serif;">กำลังประมวลผลอันดับ...</div>
+    
+    <div id="podium-container" class="podium-container" style="display: none;"></div>
+
     <ul class="list-container" id="leaderboardList" style="display: none;"></ul>
   </div>
   
   <div class="action-buttons">
-    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">ย้อนกลับ</a>
-    <button onclick="closeLiff()" class="btn btn-close">ปิดหน้าต่าง</button>
+    <a href="https://linedeveloper.github.io/TQM/index.html" class="btn btn-back">⬅ ย้อนกลับ</a>
+    <button onclick="closeLiff()" class="btn btn-close">✖ ปิดหน้าต่าง</button>
+  </div>
+
+  <div class="footer">
+    บริษัท ทีคิวเอ็ม อัลฟา จำกัด (มหาชน)<br>
+    <a href="privacy.html" target="_blank">นโยบายความเป็นส่วนตัว (Privacy Policy)</a>
   </div>
 
   <script>
-    // 🛑 อย่าลืมนำ URL และ ID ของคุณมาใส่ตรงนี้นะครับ
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
 
@@ -98,26 +190,75 @@
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
+    // ฟังก์ชันช่วยสร้าง HTML สำหรับโพเดียม 3 มิติ
+    function createPodiumHTML(user, rank) {
+      let medalIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
+      
+      return `
+        <div class="podium-item rank-${rank}">
+            <div class="podium-avatar">
+                <img src="${user.picUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                <div class="podium-medal">${medalIcon}</div>
+            </div>
+            <div class="podium-info">
+                <div class="podium-name">${user.firstName}</div>
+                <div class="podium-steps">${user.totalSteps.toLocaleString()}</div>
+            </div>
+            <div class="podium-block">${rank}</div>
+        </div>
+      `;
+    }
+
     window.onload = function() {
       initLiff();
       fetch(GAS_WEB_APP_URL + "?action=getLeaderboard", { redirect: 'follow' })
         .then(res => res.json())
         .then(res => {
           document.getElementById('loading').style.display = 'none';
+          
           if (res.status === "success" && res.data.length > 0) {
-            const listElement = document.getElementById('leaderboardList');
-            listElement.style.display = 'block';
-            res.data.forEach((user, index) => {
-              const rank = index + 1;
-              let rankClass = rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : "";
-              let rankIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank;
+            
+            // แยกข้อมูล 3 อันดับแรก และ อันดับที่เหลือ
+            const top3 = res.data.slice(0, 3);
+            const restOfUsers = res.data.slice(3);
+
+            // เรนเดอร์ส่วน โพเดียม (Top 3)
+            const podiumContainer = document.getElementById('podium-container');
+            if(top3.length > 0) {
+              podiumContainer.style.display = 'flex';
+              let podiumHTML = '';
               
-              const li = document.createElement('li');
-              li.className = `list-item ${rankClass}`;
-              li.innerHTML = `<div class="rank-circle">${rankIcon}</div><img src="${user.picUrl}" class="profile-pic" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'"><div class="user-name">${user.firstName} ${user.lastName}</div><div class="step-count">${user.totalSteps.toLocaleString()} ก้าว</div>`;
-              listElement.appendChild(li);
-            });
-          } else { document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; document.getElementById('loading').style.display = 'block'; }
+              if(top3[1]) podiumHTML += createPodiumHTML(top3[1], 2); // ซ้าย (ที่ 2)
+              if(top3[0]) podiumHTML += createPodiumHTML(top3[0], 1); // กลาง (ที่ 1)
+              if(top3[2]) podiumHTML += createPodiumHTML(top3[2], 3); // ขวา (ที่ 3)
+
+              podiumContainer.innerHTML = podiumHTML;
+            }
+
+            // เรนเดอร์ส่วน รายชื่อปกติ (อันดับ 4 เป็นต้นไป)
+            if(restOfUsers.length > 0) {
+              const listElement = document.getElementById('leaderboardList');
+              listElement.style.display = 'block';
+              
+              restOfUsers.forEach((user, index) => {
+                const rank = index + 4; // เริ่มนับต่อจากอันดับที่ 3
+                
+                const li = document.createElement('li');
+                li.className = `list-item`;
+                li.innerHTML = `
+                  <div class="rank-circle">${rank}</div>
+                  <img src="${user.picUrl}" class="profile-pic" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                  <div class="user-name">${user.firstName} ${user.lastName}</div>
+                  <div class="step-count">${user.totalSteps.toLocaleString()} ก้าว</div>
+                `;
+                listElement.appendChild(li);
+              });
+            }
+
+          } else { 
+            document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; 
+            document.getElementById('loading').style.display = 'block'; 
+          }
         }).catch(err => document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล");
     }
   </script>
