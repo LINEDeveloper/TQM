@@ -252,13 +252,13 @@
                 .then(res => res.json())
                 .then(res => {
                 if (res.status === "success") {
+                    // เปลี่ยน UI ให้พร้อมแสดงผล
                     document.getElementById("form-section").style.display = "none";
                     document.getElementById("appDescription").style.display = "none";
                     document.getElementById("result-section").style.display = "block";
                     
-                    // แสดง Title แบบสำเร็จสำหรับส่งครั้งแรก
                     document.getElementById("result-title").style.display = "block";
-                    document.getElementById("result-title").innerText = "บันทึกสำเร็จ";
+                    document.getElementById("result-title").innerText = "🎉 ยินดีด้วย!";
                     document.getElementById("result-title").style.fontFamily = "'Kanit', sans-serif";
                     document.getElementById("result-title").style.fontWeight = "600";
                     document.getElementById("result-title").style.color = "var(--primary)";
@@ -282,6 +282,22 @@
                       </div>
                       <div style="color:#28a745; font-weight:600; font-size:16px; margin-bottom: 15px;">ยอดคุณถึง 7,000 ก้าว!</div>
                     `;
+
+                    // เคลียร์สถานะข้อความกำลังโหลด
+                    document.getElementById('status-text').innerText = "";
+
+                    // สั่งแสดง Pop-up สีเขียวแบบตั้งเวลาปิดเอง
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'บันทึกสำเร็จ',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      customClass: {
+                        popup: 'blue-theme-popup',
+                        title: 'blue-theme-title'
+                      }
+                    });
+
                 } 
                 else if (res.status === "already_submitted") { 
                     Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ บันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
