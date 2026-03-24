@@ -65,6 +65,23 @@
     @keyframes shine {
       0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
     }
+
+    /* สไตล์สำหรับกล่องสีฟ้าแสดงผลแบบมีลายพื้นหลังจางๆ ( step-result-card ) */
+    .step-result-card {
+      background-color: #1976D2; 
+      background-image:
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZD0iTTUwIDQwTDYwIDUwQzYwIDU1IDUwIDYwIDQwIDUwTDMwIDQwTDQwIDMzQzQwIDI4IDUwIDI4IDYwIDMzTDcwIDQwWSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48cGF0aCBkPSJNMzAgODBMNDAgOTBDNDAgOTUgMzAgMTAwIDIwIDkwTDEwIDgwTDE4IDczQzE4IDY4IDI4IDY4IDM4IDczTDQ4IDgwWiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsLTEwKSIsIHNjYWxlPSIwLjU5Ii8+PHBhdGggZD0iTTQwIDYwTDUwIDcwQzUwIDc1IDQwIDgwIDMwIDcwTDIwIDYwTDI4IDUzQzI4IDQ4IDM4IDQ4IDQ4IDUzTDYwIDYwWiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1LC0zMCkiLz48L3N2Zz4="),
+        linear-gradient(135deg, #1976D2, #1565C0);
+      background-repeat: repeat, no-repeat;
+      background-size: auto, cover;
+      border: none;
+      padding: 25px 20px;
+      border-radius: 20px;
+      margin: 15px 0;
+      box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
+      position: relative;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -82,15 +99,24 @@
 
     <div id="form-section" style="display: none;">
       <div id="register-section" style="display: none;">
-        <input type="text" id="firstName" placeholder="ชื่อจริง (ไม่ต้องใส่คำนำหน้า)">
+        <label class="input-label">ชื่อจริง (ไม่ต้องใส่คำนำหน้า)</label>
+        <input type="text" id="firstName" placeholder="ชื่อจริง">
+        <label class="input-label">นามสกุล</label>
         <input type="text" id="lastName" placeholder="นามสกุล">
+        <label class="input-label">น้ำหนักปัจจุบัน (กิโลกรัม)</label>
+        <input type="number" id="weight" placeholder="เช่น 65" step="0.1">
+        <label class="input-label">ส่วนสูง (เซนติเมตร)</label>
+        <input type="number" id="height" placeholder="เช่น 170">
       </div>
+      
       <label class="input-label">ยอดก้าวเดินวันนี้ (ตัวเลขเท่านั้น)</label>
       <input type="number" id="stepCount" placeholder="เช่น 8500" required>
+      <label class="input-label">ค่าเฉลี่ยเผาผลาญ (Calories)</label>
+      <input type="number" id="caloriesCount" placeholder="เช่น 350" required step="0.1">
       <label class="input-label">อัปโหลดรูปภาพหลักฐาน</label>
       <input type="file" id="proofImage" accept="image/*" required>
       
-      <button class="sync-btn" onclick="submitData()" id="syncBtn">ส่งหลักฐานและบันทึกก้าว</button>
+      <button class="sync-btn" onclick="submitData()" id="syncBtn">ส่งหลักฐานและบันทึกข้อมูล</button>
       <div id="status-text"></div>
     </div>
 
@@ -155,11 +181,10 @@
             let displayTotal = user.totalSteps ? user.totalSteps.toLocaleString() : "0"; 
             let submitTime = user.submitTime ? user.submitTime : ""; 
             
-            // เตรียมข้อความแสดงเวลา ถ้ามีข้อมูล
             let timeHtml = submitTime ? `<div style="font-size: 13px; color: #E3F2FD; margin-top: -5px; margin-bottom: 15px; font-weight: 300;">อัปเดตล่าสุดเมื่อเวลา: ${submitTime} น.</div>` : "";
 
             document.getElementById('step-result').innerHTML = `
-              <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
+              <div class="step-result-card">
                 <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
                 <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 10px;">
                   ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
@@ -184,16 +209,31 @@
     }
 
     function submitData() {
+      // ดึงข้อมูลกรณีลงทะเบียนครั้งแรก
       let fName = isRegistered ? savedFirstName : document.getElementById('firstName').value.trim();
       let lName = isRegistered ? savedLastName : document.getElementById('lastName').value.trim();
+      let weightVal = isRegistered ? "" : document.getElementById('weight').value.trim();
+      let heightVal = isRegistered ? "" : document.getElementById('height').value.trim();
+
+      // ดึงข้อมูลที่ต้องส่งทุกวัน
       const stepInput = document.getElementById('stepCount').value.trim();
+      const caloriesInput = document.getElementById('caloriesCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
-      if (!fName || !lName || !stepInput || fileInput.files.length === 0) {
+      // ตรวจสอบความครบถ้วนของข้อมูล
+      let isMissingData = false;
+      if (!fName || !lName || !stepInput || !caloriesInput || fileInput.files.length === 0) {
+        isMissingData = true;
+      }
+      if (!isRegistered && (!weightVal || !heightVal)) {
+        isMissingData = true;
+      }
+
+      if (isMissingData) {
         return Swal.fire({ 
           icon: 'warning', 
           title: 'ข้อมูลไม่ครบ', 
-          text: 'กรุณากรอกยอดก้าวและแนบรูปภาพให้ครบถ้วนครับ', 
+          text: 'กรุณากรอกข้อมูลและแนบรูปภาพให้ครบถ้วนทุกช่องครับ', 
           confirmButtonText: 'ตกลง',
           confirmButtonColor: '#1976D2',
           customClass: {
@@ -239,8 +279,18 @@
                 const base64Data = e.target.result.split(',')[1]; 
                 
                 const payload = {
-                action: 'submitSteps', uid: lineUserId, firstName: fName, lastName: lName, steps: steps,
-                pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
+                action: 'submitSteps', 
+                uid: lineUserId, 
+                firstName: fName, 
+                lastName: lName, 
+                weight: weightVal,      // ข้อมูลน้ำหนัก
+                height: heightVal,      // ข้อมูลส่วนสูง
+                steps: steps,
+                calories: caloriesInput, // ข้อมูลแคลอรี่
+                pictureUrl: savedPicUrl, 
+                imageFile: base64Data, 
+                mimeType: file.type, 
+                fileName: lineUserId + "_" + Date.now() + "_" + file.name 
                 };
 
                 fetch(GAS_WEB_APP_URL, { 
@@ -268,7 +318,7 @@
                     let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; 
                     
                     document.getElementById("step-result").innerHTML = `
-                      <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
+                      <div class="step-result-card">
                         <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
                         <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
                           ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
