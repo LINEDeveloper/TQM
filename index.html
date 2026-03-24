@@ -65,6 +65,24 @@
     @keyframes shine {
       0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
     }
+
+    /* สไตล์สำหรับกล่องสีฟ้าแสดงผล ( step-result-card ) */
+    .step-result-card {
+      background-color: #1976D2; /* Fallback สำหรับเบราว์เซอร์เก่า */
+      /* เพิ่มรูปลายพื้นหลัง จางๆ รูปสัญลักษณ์กิจกรรม (รองเท้า) */
+      background-image:
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZD0iTTUwIDQwTDYwIDUwQzYwIDU1IDUwIDYwIDQwIDUwTDMwIDQwTDQwIDMzQzQwIDI4IDUwIDI4IDYwIDMzTDcwIDQwWSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48cGF0aCBkPSJNMzAgODBMNDAgOTBDNDAgOTUgMzAgMTAwIDIwIDkwTDEwIDgwTDE4IDczQzE4IDY4IDI4IDY4IDM4IDczTDQ4IDgwWiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsLTEwKSIsIHNjYWxlPSIwLjU5Ii8+PHBhdGggZD0iTTQwIDYwTDUwIDcwQzUwIDc1IDQwIDgwIDMwIDcwTDIwIDYwTDI4IDUzQzI4IDQ4IDM4IDQ4IDQ4IDUzTDYwIDYwWiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1LC0zMCkiLz48L3N2Zz4="),
+        linear-gradient(135deg, #1976D2, #1565C0);
+      background-repeat: repeat, no-repeat;
+      background-size: auto, cover; /* คลุมทั้งหมด */
+      border: none;
+      padding: 25px 20px;
+      border-radius: 20px;
+      margin: 15px 0;
+      box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
+      position: relative;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -97,7 +115,7 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/Leaderboard/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
     </div>
   </div>
 
@@ -159,7 +177,7 @@
             let timeHtml = submitTime ? `<div style="font-size: 13px; color: #E3F2FD; margin-top: -5px; margin-bottom: 15px; font-weight: 300;">อัปเดตล่าสุดเมื่อเวลา: ${submitTime} น.</div>` : "";
 
             document.getElementById('step-result').innerHTML = `
-              <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
+              <div class="step-result-card">
                 <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
                 <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 10px;">
                   ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
@@ -268,7 +286,7 @@
                     let displayTotal = res.totalSteps ? res.totalSteps.toLocaleString() : "0"; 
                     
                     document.getElementById("step-result").innerHTML = `
-                      <div style="background: linear-gradient(135deg, #1976D2, #1565C0); border: none; padding: 25px 20px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);">
+                      <div class="step-result-card">
                         <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 5px; font-weight: 500;">ยอดก้าววันนี้ของคุณ</div>
                         <div style="font-size: 40px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1; margin-bottom: 15px;">
                           ${displaySteps} <span style="font-size: 18px; font-weight: normal;">ก้าว</span>
@@ -284,7 +302,7 @@
                     `;
                 } 
                 else if (res.status === "already_submitted") { 
-                    Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ ระบบบันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
+                    Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ ระบบรับข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
                 }
                 }).catch(err => { 
                 Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว กรุณาลองใหม่', confirmButtonColor: '#d33' });
