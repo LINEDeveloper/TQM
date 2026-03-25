@@ -154,7 +154,6 @@
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
-    // ฟังก์ชันสร้าง UI กล่องสีฟ้า (อัปเดต: เปลี่ยนแคลอรี่เป็นน้ำหนัก และลบแคลอรี่สะสม)
     function buildResultHTML(steps, weight, totalSteps, submitTime) {
       let displaySteps = steps ? steps.toLocaleString() : "0";
       let displayWeight = weight ? parseFloat(weight).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
