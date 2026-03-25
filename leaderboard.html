@@ -12,140 +12,56 @@
     :root { --primary: #1976D2; --bg-color: #F0F4F8; --card-bg: #FFFFFF; }
     body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; -webkit-tap-highlight-color: transparent;}
     
-    /* กรอบตราเหรียญทองมุมมน พร้อมแสงทองปาด */
     .leaderboard-header-badge {
-      position: relative; 
-      overflow: hidden; 
-      background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
-      padding: 20px;
-      border-radius: 20px; 
-      width: 100%;
-      max-width: 500px;
-      box-sizing: border-box;
-      text-align: center;
-      margin-bottom: 25px;
-      box-shadow: 0 8px 25px rgba(243, 195, 0, 0.35); 
+      position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
+      padding: 20px; border-radius: 20px; width: 100%; max-width: 500px; box-sizing: border-box; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(243, 195, 0, 0.35); 
     }
     .leaderboard-header-badge::after {
-      content: "";
-      position: absolute;
-      top: 0; left: -100%; width: 50%; height: 100%;
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
       background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg);
-      animation: shineHeader 3.5s infinite; 
+      transform: skewX(-25deg); animation: shineHeader 3.5s infinite; 
     }
-    @keyframes shineHeader {
-      0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
-    }
+    @keyframes shineHeader { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
     
     .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: #5C3A21; margin: 0; font-weight: 600; text-shadow: 0 1px 2px rgba(255,255,255,0.5);}
     .header-sub { color:#785838; font-size: 14px; margin-top: 5px; font-weight: 500;}
 
+    /* 🌟 ปุ่ม Tabs สำหรับสลับประเภท */
+    .tabs-container { display: flex; width: 100%; max-width: 500px; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 12px; text-align: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; border-radius: 12px; border: none; cursor: pointer; transition: 0.3s; background-color: #E0E0E0; color: #555; }
+    .tab-btn.active { background-color: var(--primary); color: #FFF; box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3); }
+
     .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; padding-bottom: 10px;}
     
-    /* สไตล์โพเดียม 3 มิติ (Top 3) แบบคลีนและหรูหรา */
-    .podium-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 6px;
-      margin: 40px 10px 20px 10px;
-      padding-bottom: 15px;
-      border-bottom: 2px dashed #E3F2FD;
-    }
-    .podium-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 32%;
-      position: relative;
-    }
+    .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 6px; margin: 40px 10px 20px 10px; padding-bottom: 15px; border-bottom: 2px dashed #E3F2FD; }
+    .podium-item { display: flex; flex-direction: column; align-items: center; width: 32%; position: relative; }
     .podium-item.rank-1 { order: 2; z-index: 10; margin-bottom: 15px; } 
     .podium-item.rank-2 { order: 1; } 
     .podium-item.rank-3 { order: 3; } 
 
     .podium-avatar { position: relative; margin-bottom: 12px; }
-    .podium-avatar img {
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12); 
-      background: #fff;
-      border: 3px solid;
-      padding: 2px; 
-    }
+    .podium-avatar img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.12); background: #fff; border: 3px solid; padding: 2px; }
     .rank-1 .podium-avatar img { width: 85px; height: 85px; border-color: #F59E0B; }
     .rank-2 .podium-avatar img { border-color: #94A3B8; }
     .rank-3 .podium-avatar img { border-color: #EA580C; }
 
-    /* มงกุฎลอยได้สำหรับแชมป์ */
-    .rank-1 .podium-avatar::before {
-      content: "👑";
-      position: absolute;
-      top: -30px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 32px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-      z-index: 10;
-      animation: floatCrown 2s infinite ease-in-out;
-    }
-    @keyframes floatCrown {
-      0%, 100% { transform: translate(-50%, 0); }
-      50% { transform: translate(-50%, -8px); }
-    }
+    .rank-1 .podium-avatar::before { content: "👑"; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); z-index: 10; animation: floatCrown 2s infinite ease-in-out; }
+    @keyframes floatCrown { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
 
-    .podium-medal {
-      position: absolute;
-      bottom: -12px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); 
-    }
+    .podium-medal { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 24px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); }
     .rank-1 .podium-medal { font-size: 34px; bottom: -18px; }
 
     .podium-info { text-align: center; margin-bottom: 12px; width: 100%; padding: 0 5px; box-sizing: border-box;}
-    .podium-name {
-      font-size: 13px; font-weight: 600; color: #444; 
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      margin-bottom: 3px;
-    }
-    .podium-steps {
-      font-size: 15px; font-weight: 600; color: #1976D2; font-family: 'Kanit', sans-serif; line-height: 1.1;
-    }
+    .podium-name { font-size: 13px; font-weight: 600; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .podium-member { font-size: 11px; color: #888; margin-top: -3px; margin-bottom: 3px; display: none; }
+    .podium-steps { font-size: 15px; font-weight: 600; color: #1976D2; font-family: 'Kanit', sans-serif; line-height: 1.1; }
     .rank-1 .podium-steps { font-size: 17px; color: #D4AF37; }
 
-    /* ปรับกล่องแท่นยืน 3 มิติ */
-    .podium-block {
-      width: 100%;
-      border-radius: 16px 16px 0 0; 
-      display: flex; justify-content: center; align-items: flex-start;
-      padding-top: 12px;
-      color: rgba(255, 255, 255, 0.95); 
-      font-family: 'Kanit', sans-serif; 
-      font-size: 36px; 
-      font-weight: 500; 
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.06); 
-      position: relative; 
-      border-top: 2px solid rgba(255,255,255,0.6); 
-    }
+    .podium-block { width: 100%; border-radius: 16px 16px 0 0; display: flex; justify-content: center; align-items: flex-start; padding-top: 12px; color: rgba(255, 255, 255, 0.95); font-family: 'Kanit', sans-serif; font-size: 36px; font-weight: 500; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); position: relative; border-top: 2px solid rgba(255,255,255,0.6); }
+    .rank-1 .podium-block { height: 140px; background: linear-gradient(135deg, #FDE047, #F59E0B); text-shadow: 0 2px 10px rgba(245, 158, 11, 0.6); }
+    .rank-2 .podium-block { height: 100px; background: linear-gradient(135deg, #E2E8F0, #94A3B8); text-shadow: 0 2px 10px rgba(148, 163, 184, 0.6); }
+    .rank-3 .podium-block { height: 80px; background: linear-gradient(135deg, #FDBA74, #EA580C); text-shadow: 0 2px 10px rgba(234, 88, 12, 0.6); }
 
-    .rank-1 .podium-block { 
-      height: 140px; 
-      background: linear-gradient(135deg, #FDE047, #F59E0B); 
-      text-shadow: 0 2px 10px rgba(245, 158, 11, 0.6); 
-    }
-    .rank-2 .podium-block { 
-      height: 100px; 
-      background: linear-gradient(135deg, #E2E8F0, #94A3B8); 
-      text-shadow: 0 2px 10px rgba(148, 163, 184, 0.6); 
-    }
-    .rank-3 .podium-block { 
-      height: 80px; 
-      background: linear-gradient(135deg, #FDBA74, #EA580C); 
-      text-shadow: 0 2px 10px rgba(234, 88, 12, 0.6); 
-    }
-
-    /* รายชื่ออันดับที่ 4 เป็นต้นไป */
     .list-container { list-style: none; padding: 0; margin: 0; }
     .list-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; transition: background 0.3s;}
     .list-item:hover { background: #F8F9FA; }
@@ -154,8 +70,8 @@
     .rank-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; background-color: #E3F2FD; color: var(--primary); margin-right: 12px; flex-shrink: 0;}
     .profile-pic { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #E3F2FD; margin-right: 12px; flex-shrink: 0;}
     .user-name { font-weight: 500; font-size: 15px; color: #444; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;}
+    .member-badge { font-size: 11px; background: #E0E0E0; color: #555; padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-block;}
     
-    /* กล่องสำหรับแสดงก้าว */
     .stats-container { text-align: right; flex-shrink: 0; }
     .step-count { font-weight: 600; font-size: 16px; color: var(--primary); font-family: 'Kanit', sans-serif; line-height: 1.2;}
     
@@ -171,15 +87,19 @@
 <body>
   
   <div class="leaderboard-header-badge">
-    <h1 class="header-title">🏆 Top 50 Leaderboard</h1>
+    <h1 class="header-title">🏆 Leaderboard</h1>
     <div class="header-sub">อันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
+  </div>
+
+  <div class="tabs-container">
+    <button class="tab-btn active" id="tabIndiv" onclick="switchTab('individual')">👤 อันดับบุคคล</button>
+    <button class="tab-btn" id="tabTeam" onclick="switchTab('team')">👥 อันดับทีม</button>
   </div>
   
   <div class="leaderboard-card">
     <div id="loading" style="text-align:center; padding:50px; color:#1976D2; font-family: 'Kanit', sans-serif;">กำลังประมวลผลอันดับ...</div>
     
     <div id="podium-container" class="podium-container" style="display: none;"></div>
-
     <ul class="list-container" id="leaderboardList" style="display: none;"></ul>
   </div>
   
@@ -196,6 +116,8 @@
   <script>
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
+    let allData = { individual: [], team: [] };
+    let currentMode = 'individual';
 
     async function initLiff() {
       try { await liff.init({ liffId: LIFF_ID }); } catch (err) { console.log(err); }
@@ -205,22 +127,90 @@
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
-    function createPodiumHTML(user, rank) {
+    function switchTab(mode) {
+      currentMode = mode;
+      document.getElementById('tabIndiv').classList.toggle('active', mode === 'individual');
+      document.getElementById('tabTeam').classList.toggle('active', mode === 'team');
+      renderData();
+    }
+
+    function createPodiumHTML(item, rank) {
       let medalIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
       
+      // กรณีเป็นทีม ให้แสดงรูปไอคอนกลุ่ม และโชว์ชื่อทีม
+      let isTeam = currentMode === 'team';
+      let displayName = isTeam ? item.teamName : item.firstName;
+      let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
+      let memberHtml = isTeam ? `<div class="podium-member">${item.memberCount}/5 คน</div>` : "";
+
       return `
         <div class="podium-item rank-${rank}">
             <div class="podium-avatar">
-                <img src="${user.picUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                <img src="${displayPic}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                 <div class="podium-medal">${medalIcon}</div>
             </div>
             <div class="podium-info">
-                <div class="podium-name">${user.firstName}</div>
-                <div class="podium-steps">${user.totalSteps.toLocaleString()} ก้าว</div>
+                <div class="podium-name">${displayName}</div>
+                ${memberHtml}
+                <div class="podium-steps">${item.totalSteps.toLocaleString()} ก้าว</div>
             </div>
             <div class="podium-block">${rank}</div>
         </div>
       `;
+    }
+
+    function renderData() {
+      const dataArr = allData[currentMode];
+      const podiumContainer = document.getElementById('podium-container');
+      const listElement = document.getElementById('leaderboardList');
+      
+      podiumContainer.style.display = 'none';
+      listElement.style.display = 'none';
+      podiumContainer.innerHTML = '';
+      listElement.innerHTML = '';
+
+      if (dataArr.length === 0) {
+        document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลในหมวดหมู่นี้ 🏃‍♂️";
+        document.getElementById('loading').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('loading').style.display = 'none';
+
+      const top3 = dataArr.slice(0, 3);
+      const restOfUsers = dataArr.slice(3);
+
+      if(top3.length > 0) {
+        podiumContainer.style.display = 'flex';
+        let podiumHTML = '';
+        if(top3[1]) podiumHTML += createPodiumHTML(top3[1], 2); 
+        if(top3[0]) podiumHTML += createPodiumHTML(top3[0], 1); 
+        if(top3[2]) podiumHTML += createPodiumHTML(top3[2], 3); 
+        podiumContainer.innerHTML = podiumHTML;
+      }
+
+      if(restOfUsers.length > 0) {
+        listElement.style.display = 'block';
+        restOfUsers.forEach((item, index) => {
+          const rank = index + 4; 
+          let isTeam = currentMode === 'team';
+          let displayName = isTeam ? item.teamName : `${item.firstName} ${item.lastName || ''}`;
+          let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
+          let memberBadge = isTeam ? `<span class="member-badge">${item.memberCount}/5 คน</span>` : "";
+
+          const li = document.createElement('li');
+          li.className = `list-item`;
+          li.innerHTML = `
+            <div class="rank-circle">${rank}</div>
+            <img src="${displayPic}" class="profile-pic" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+            <div class="user-name">${displayName} ${memberBadge}</div>
+            <div class="stats-container">
+              <div class="step-count">${item.totalSteps.toLocaleString()} ก้าว</div>
+            </div>
+          `;
+          listElement.appendChild(li);
+        });
+      }
     }
 
     window.onload = function() {
@@ -228,49 +218,11 @@
       fetch(GAS_WEB_APP_URL + "?action=getLeaderboard", { redirect: 'follow' })
         .then(res => res.json())
         .then(res => {
-          document.getElementById('loading').style.display = 'none';
-          
-          if (res.status === "success" && res.data.length > 0) {
-            
-            const top3 = res.data.slice(0, 3);
-            const restOfUsers = res.data.slice(3);
-
-            const podiumContainer = document.getElementById('podium-container');
-            if(top3.length > 0) {
-              podiumContainer.style.display = 'flex';
-              let podiumHTML = '';
-              
-              if(top3[1]) podiumHTML += createPodiumHTML(top3[1], 2); 
-              if(top3[0]) podiumHTML += createPodiumHTML(top3[0], 1); 
-              if(top3[2]) podiumHTML += createPodiumHTML(top3[2], 3); 
-
-              podiumContainer.innerHTML = podiumHTML;
-            }
-
-            if(restOfUsers.length > 0) {
-              const listElement = document.getElementById('leaderboardList');
-              listElement.style.display = 'block';
-              
-              restOfUsers.forEach((user, index) => {
-                const rank = index + 4; 
-                
-                const li = document.createElement('li');
-                li.className = `list-item`;
-                li.innerHTML = `
-                  <div class="rank-circle">${rank}</div>
-                  <img src="${user.picUrl}" class="profile-pic" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
-                  <div class="user-name">${user.firstName} ${user.lastName}</div>
-                  <div class="stats-container">
-                    <div class="step-count">${user.totalSteps.toLocaleString()} ก้าว</div>
-                  </div>
-                `;
-                listElement.appendChild(li);
-              });
-            }
-
+          if (res.status === "success") {
+            allData = res.data; // เก็บทั้งหมวด individual และ team ไว้ในตัวแปร
+            renderData(); // เรียกแสดงผลครั้งแรก (Tab บุคคล)
           } else { 
             document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; 
-            document.getElementById('loading').style.display = 'block'; 
           }
         }).catch(err => document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล");
     }
