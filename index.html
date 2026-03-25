@@ -56,7 +56,6 @@
     }
     @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-    /* สไตล์สำหรับกล่องสีฟ้า */
     .step-result-card {
       background-color: #1976D2; 
       background-image:
@@ -88,6 +87,9 @@
 
     <div id="form-section" style="display: none;">
       <div id="register-section" style="display: none;">
+        <label class="input-label">รหัสพนักงาน</label>
+        <input type="text" id="empId" placeholder="เช่น 12345">
+        
         <label class="input-label">ชื่อจริง (ไม่ต้องใส่คำนำหน้า)</label>
         <input type="text" id="firstName" placeholder="ชื่อจริง">
         <label class="input-label">นามสกุล</label>
@@ -98,10 +100,14 @@
         <input type="number" id="height" placeholder="เช่น 170">
       </div>
       
-      <label class="input-label" id="stepLabel">ค่าเฉลี่ยเดินวันละกี่ก้าว (ค่าเฉลี่ย 7 วัน)</label>
+      <label class="input-label" id="stepLabel">ยอดก้าวเดินวันนี้ (ตัวเลขเท่านั้น)</label>
       <input type="number" id="stepCount" placeholder="เช่น 8500" required>
-      <label class="input-label">ค่าเฉลี่ยเผาผลาญ (Calories)</label>
-      <input type="number" id="caloriesCount" placeholder="เช่น 350" required step="0.1">
+      
+      <div id="daily-weight-section" style="display: none;">
+        <label class="input-label">น้ำหนัก (กิโลกรัม)</label>
+        <input type="number" id="dailyWeight" placeholder="เช่น 65" step="0.1">
+      </div>
+
       <label class="input-label">อัปโหลดรูปภาพหลักฐาน</label>
       <input type="file" id="proofImage" accept="image/*" required>
       
@@ -148,7 +154,6 @@
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
     }
 
-    // ฟังก์ชันสร้าง UI กล่องสีฟ้า ให้ดูคลีนและแสดงข้อมูลครบ
     function buildResultHTML(steps, cal, totalSteps, totalCal, submitTime) {
       let displaySteps = steps ? steps.toLocaleString() : "0";
       let displayCal = cal ? parseFloat(cal).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
@@ -208,35 +213,38 @@
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
             
-            // เรียกใช้ฟังก์ชันวาด UI
             document.getElementById('step-result').innerHTML = buildResultHTML(
               user.todaySteps, user.todayCalories, user.totalSteps, user.totalCalories, user.submitTime
             );
           } else { 
-            // กรณีเป็นพนักงานที่ลงทะเบียนแล้ว (ส่งรายวัน) แสดงฟอร์มตามปกติ
+            // 🌟 กรณีเป็นพนักงานเก่า: แสดงฟอร์มส่งข้อมูลรายวัน และโชว์ช่องน้ำหนักรายวัน
             document.getElementById('form-section').style.display = "block"; 
+            document.getElementById('daily-weight-section').style.display = "block";
           }
         } else {
-          // กรณีลงทะเบียนครั้งแรก
+          // 🌟 กรณีพนักงานใหม่: โชว์ฟอร์มลงทะเบียนครั้งแรก แต่ซ่อนช่องน้ำหนักรายวันไป
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
           document.getElementById('form-section').style.display = "block";
           document.getElementById('register-section').style.display = "block"; 
+          document.getElementById('daily-weight-section').style.display = "none";
         }
       } catch (error) { document.getElementById('welcome-text').innerText = "เชื่อมต่อระบบฐานข้อมูลไม่สำเร็จ"; }
     }
 
     function submitData() {
+      let empIdVal = isRegistered ? "" : document.getElementById('empId').value.trim();
       let fName = isRegistered ? savedFirstName : document.getElementById('firstName').value.trim();
       let lName = isRegistered ? savedLastName : document.getElementById('lastName').value.trim();
-      let weightVal = isRegistered ? "" : document.getElementById('weight').value.trim();
       let heightVal = isRegistered ? "" : document.getElementById('height').value.trim();
+      
+      let weightVal = isRegistered ? document.getElementById('dailyWeight').value.trim() : document.getElementById('weight').value.trim();
+      
       const stepInput = document.getElementById('stepCount').value.trim();
-      const caloriesInput = document.getElementById('caloriesCount').value.trim();
       const fileInput = document.getElementById('proofImage');
 
       let isMissingData = false;
-      if (!fName || !lName || !stepInput || !caloriesInput || fileInput.files.length === 0) isMissingData = true;
-      if (!isRegistered && (!weightVal || !heightVal)) isMissingData = true;
+      if (!stepInput || !weightVal || fileInput.files.length === 0) isMissingData = true;
+      if (!isRegistered && (!empIdVal || !fName || !lName || !heightVal)) isMissingData = true;
 
       if (isMissingData) {
         return Swal.fire({ 
@@ -269,8 +277,8 @@
                 const base64Data = e.target.result.split(',')[1]; 
                 
                 const payload = {
-                  action: 'submitSteps', uid: lineUserId, firstName: fName, lastName: lName, 
-                  weight: weightVal, height: heightVal, steps: steps, calories: caloriesInput, 
+                  action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
+                  weight: weightVal, height: heightVal, steps: steps, calories: 0, 
                   pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
                 };
 
@@ -291,7 +299,6 @@
                     document.getElementById("result-title").style.color = "var(--primary)";
                     document.getElementById("result-title").style.fontSize = "24px";
                     
-                    // เรียกใช้ฟังก์ชันวาด UI
                     document.getElementById("step-result").innerHTML = buildResultHTML(
                       res.steps, res.calories, res.totalSteps, res.totalCalories, ""
                     );
