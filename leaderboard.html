@@ -112,9 +112,6 @@
     .podium-steps {
       font-size: 15px; font-weight: 600; color: #1976D2; font-family: 'Kanit', sans-serif; line-height: 1.1;
     }
-    .podium-cal {
-      font-size: 11px; font-weight: 500; color: #E65100; font-family: 'Kanit', sans-serif; margin-top: 2px;
-    }
     .rank-1 .podium-steps { font-size: 17px; color: #D4AF37; }
 
     /* ปรับกล่องแท่นยืน 3 มิติ */
@@ -158,10 +155,9 @@
     .profile-pic { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #E3F2FD; margin-right: 12px; flex-shrink: 0;}
     .user-name { font-weight: 500; font-size: 15px; color: #444; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;}
     
-    /* กล่องสำหรับแสดงก้าวและแคลอรี่ */
+    /* กล่องสำหรับแสดงก้าว */
     .stats-container { text-align: right; flex-shrink: 0; }
     .step-count { font-weight: 600; font-size: 16px; color: var(--primary); font-family: 'Kanit', sans-serif; line-height: 1.2;}
-    .cal-count { font-size: 12px; font-weight: 500; color: #E65100; font-family: 'Kanit', sans-serif; margin-top: 2px;}
     
     .action-buttons { width: 100%; max-width: 500px; display: flex; gap: 10px; }
     .btn { flex: 1; padding: 14px; text-align: center; border-radius: 12px; text-decoration: none; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; border: none; }
@@ -211,7 +207,6 @@
 
     function createPodiumHTML(user, rank) {
       let medalIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
-      let displayCal = user.totalCalories ? user.totalCalories.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1}) : "0.0";
       
       return `
         <div class="podium-item rank-${rank}">
@@ -222,7 +217,6 @@
             <div class="podium-info">
                 <div class="podium-name">${user.firstName}</div>
                 <div class="podium-steps">${user.totalSteps.toLocaleString()} ก้าว</div>
-                <div class="podium-cal">🔥 ${displayCal} kcal</div>
             </div>
             <div class="podium-block">${rank}</div>
         </div>
@@ -259,7 +253,6 @@
               
               restOfUsers.forEach((user, index) => {
                 const rank = index + 4; 
-                let displayCal = user.totalCalories ? user.totalCalories.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1}) : "0.0";
                 
                 const li = document.createElement('li');
                 li.className = `list-item`;
@@ -269,7 +262,6 @@
                   <div class="user-name">${user.firstName} ${user.lastName}</div>
                   <div class="stats-container">
                     <div class="step-count">${user.totalSteps.toLocaleString()} ก้าว</div>
-                    <div class="cal-count">🔥 ${displayCal} kcal</div>
                   </div>
                 `;
                 listElement.appendChild(li);
