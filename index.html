@@ -28,6 +28,10 @@
     .btn-line { background-color: #00B900; box-shadow: 0 4px 10px rgba(0,185,0,0.3); }
     .btn-close { background-color: #f1f3f4; color: #333; box-shadow: none; margin-top: 10px; font-weight: 500; font-size: 14px;}
     
+    /* ปุ่มเลือกประเภท */
+    .btn-type-indiv { background-color: #1976D2; margin-bottom: 10px; }
+    .btn-type-team { background-color: #F57C00; }
+
     #status-text { text-align: center; font-size: 14px; margin-top: 15px; font-weight: 600;}
     .logo-header { text-align: center; margin-bottom: 15px; }
     .logo-header img { max-width: 120px; height: auto; }
@@ -74,7 +78,7 @@
 </head>
 <body>
   <div class="card">
-    <div class="logo-header"><img src="https://img1.pic.in.th/images/tqm-og-image-removebg-preview_0.png" alt="Channel Academy Logo"></div>
+    <div class="logo-header"><img src="https://www.tqmalpha.com/storage/logo/logo-tqm-blue.svg" alt="Channel Academy Logo"></div>
     <h2 id="main-title">ภารกิจพิชิต 7,000 ก้าว/วัน</h2>
     <div class="app-desc" id="appDescription">กิจกรรมส่งเสริมสุขภาพพนักงาน<br>กรุณากรอกยอดก้าวเดินและแนบรูปภาพเพื่อสะสมคะแนน</div>
     
@@ -85,8 +89,20 @@
     
     <button class="sync-btn btn-line" id="lineLoginBtn" onclick="liff.login()" style="display: none;">เข้าสู่ระบบด้วย LINE</button>
 
+    <div id="type-selection-section" style="display: none; text-align: center; margin-bottom: 20px;">
+      <h3 style="color: var(--primary); font-family: 'Kanit', sans-serif; margin-bottom: 15px;">เลือกประเภทการสมัคร</h3>
+      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">👤 สมัครประเภทบุคคล</button>
+      <button class="sync-btn btn-type-team" onclick="selectType('team')">👥 สมัครประเภททีม 5 คน</button>
+    </div>
+
     <div id="form-section" style="display: none;">
       <div id="register-section" style="display: none;">
+        
+        <div id="team-name-container" style="display: none; background: #FFF3E0; padding: 12px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #FFE0B2;">
+          <label class="input-label" style="color: #E65100;">ตั้งชื่อทีม (พิมพ์ให้เหมือนกับเพื่อนในทีมเป๊ะๆ)</label>
+          <input type="text" id="teamName" placeholder="เช่น ทีมสายลุย" style="margin-bottom: 5px;">
+        </div>
+
         <label class="input-label">รหัสพนักงาน</label>
         <input type="text" id="empId" placeholder="เช่น 12345">
         
@@ -131,6 +147,9 @@
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
+    
+    // 🌟 ตัวแปรเก็บประเภทการสมัคร
+    let selectedUserType = "individual"; 
 
     async function main() {
       await liff.init({ liffId: LIFF_ID });
@@ -152,6 +171,20 @@
 
     function closeLiff() {
       if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
+    }
+
+    // 🌟 ฟังก์ชันจัดการปุ่มเลือกประเภท
+    function selectType(type) {
+      selectedUserType = type;
+      document.getElementById('type-selection-section').style.display = "none";
+      document.getElementById('form-section').style.display = "block";
+      document.getElementById('register-section').style.display = "block";
+      
+      if (type === "team") {
+        document.getElementById('team-name-container').style.display = "block";
+      } else {
+        document.getElementById('team-name-container').style.display = "none";
+      }
     }
 
     function buildResultHTML(steps, weight, totalSteps, submitTime) {
@@ -209,13 +242,14 @@
               user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime
             );
           } else { 
+            // เคยลงทะเบียนแล้ว ข้ามไปหน้ากรอกรายวันเลย
             document.getElementById('form-section').style.display = "block"; 
             document.getElementById('daily-weight-section').style.display = "block";
           }
         } else {
+          // 🌟 กรณีพนักงานใหม่: โชว์ปุ่มเลือกประเภทก่อน และซ่อนฟอร์มไปก่อน
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
-          document.getElementById('form-section').style.display = "block";
-          document.getElementById('register-section').style.display = "block"; 
+          document.getElementById('type-selection-section').style.display = "block";
           document.getElementById('daily-weight-section').style.display = "none";
         }
       } catch (error) { document.getElementById('welcome-text').innerText = "เชื่อมต่อระบบฐานข้อมูลไม่สำเร็จ"; }
@@ -227,6 +261,7 @@
       let lName = isRegistered ? savedLastName : document.getElementById('lastName').value.trim();
       let heightVal = isRegistered ? "" : document.getElementById('height').value.trim();
       
+      let teamNameVal = isRegistered ? "" : document.getElementById('teamName').value.trim();
       let weightVal = isRegistered ? document.getElementById('dailyWeight').value.trim() : document.getElementById('weight').value.trim();
       
       const stepInput = document.getElementById('stepCount').value.trim();
@@ -235,6 +270,8 @@
       let isMissingData = false;
       if (!stepInput || !weightVal || fileInput.files.length === 0) isMissingData = true;
       if (!isRegistered && (!empIdVal || !fName || !lName || !heightVal)) isMissingData = true;
+      // เช็คถ้าเลือกแบบทีม ต้องกรอกชื่อทีมด้วย
+      if (!isRegistered && selectedUserType === "team" && !teamNameVal) isMissingData = true;
 
       if (isMissingData) {
         return Swal.fire({ 
@@ -269,6 +306,7 @@
                 const payload = {
                   action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
                   weight: weightVal, height: heightVal, steps: steps, 
+                  userType: selectedUserType, teamName: teamNameVal, // 🌟 ส่งประเภทและชื่อทีมไปด้วย
                   pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
                 };
 
