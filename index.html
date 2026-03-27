@@ -33,7 +33,6 @@
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
     .btn-gold-shine { position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4); text-decoration:none; box-sizing: border-box; display:inline-block; margin-top:10px; padding:15px; width:100%; text-align:center; font-family: 'Kanit', sans-serif; font-weight: 600; border-radius: 10px;}
     
-    /* สไตล์กล่องผลลัพธ์ */
     .step-result-card {
       background-color: #1976D2; 
       background-image: linear-gradient(135deg, #1976D2, #1565C0);
@@ -48,7 +47,7 @@
   <div class="card">
     <div class="logo-header"><img src="https://www.tqmalpha.com/storage/logo/logo-tqm-blue.svg" alt="Logo"></div>
     <h2 id="main-title">ภารกิจพิชิต 1,200 ล้านก้าว</h2>
-    <div class="app-desc" id="appDescription">กิจกรรมส่งเสริมสุขภาพพนักงาน<br>กรุณากรอกยอดก้าวเดินและน้ำหนักเพื่อสะสมคะแนน</div>
+    <div class="app-desc" id="appDescription">กิจกรรมส่งเสริมสุขภาพพนักงาน<br>กรุณากรอกยอดก้าวเดินเพื่อสะสมคะแนน</div>
     
     <div class="profile-container" id="profile-container" style="display: none;">
       <img id="userProfilePic" class="profile-pic" src="">
@@ -85,8 +84,10 @@
       <input type="number" id="stepCount" placeholder="เช่น 8500" required>
       
       <div id="daily-weight-section" style="display: none;">
-        <label class="input-label">น้ำหนักปัจจุบัน (กิโลกรัม)</label>
-        <input type="number" id="dailyWeight" placeholder="เช่น 65" step="0.1">
+        <div style="background-color: #E8F5E9; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #C8E6C9;">
+          <label class="input-label" style="color: #2E7D32;">✨ อัปเดตน้ำหนักประจำเดือน (เปิดให้กรอก 1-7 ของเดือน)</label>
+          <input type="number" id="dailyWeight" placeholder="อัปเดตน้ำหนักล่าสุด (กก.)" step="0.1" style="margin-bottom:0;">
+        </div>
       </div>
       
       <button class="sync-btn" onclick="submitData()" id="syncBtn">บันทึกข้อมูล</button>
@@ -136,12 +137,22 @@
       document.getElementById('team-name-container').style.display = type === "team" ? "block" : "none";
     }
 
-    // 🌟 ดึงฟังก์ชันนำเสนอ น้ำหนัก กลับมา
-    function buildResultHTML(steps, weight, totalSteps, submitTime) {
+    // 🌟 ระบบสร้าง HTML และคำนวณลูกศรเทรนด์
+    function buildResultHTML(steps, weight, totalSteps, submitTime, trend) {
       let displaySteps = steps ? steps.toLocaleString() : "0";
       let displayWeight = weight ? parseFloat(weight).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
       let displayTotalSteps = totalSteps ? totalSteps.toLocaleString() : "0";
       let timeHtml = submitTime ? `<div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center; font-weight: 300;">อัปเดตล่าสุด: ${submitTime} น.</div>` : "";
+
+      // ประมวลผลเทรนด์ (บวก=อ้วนขึ้น, ลบ=ผอมลง)
+      let trendHtml = "";
+      if (trend > 0) {
+        trendHtml = `<div style="font-size: 12px; color: #FF8A65; margin-top: 4px; font-weight: 600;">📈 ขึ้น ${trend.toFixed(1)} กก.</div>`;
+      } else if (trend < 0) {
+        trendHtml = `<div style="font-size: 12px; color: #81C784; margin-top: 4px; font-weight: 600;">📉 ลง ${Math.abs(trend).toFixed(1)} กก.</div>`;
+      } else {
+        trendHtml = `<div style="font-size: 12px; color: #E3F2FD; margin-top: 4px; font-weight: 300;">➖ คงที่</div>`;
+      }
 
       return `
         <div class="step-result-card">
@@ -155,6 +166,7 @@
             <div style="text-align: center; width: 45%;">
               <div style="font-size: 32px; font-weight: bold; color: #FFD54F; font-family: 'Kanit', sans-serif; line-height: 1;">${displayWeight}</div>
               <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">⚖️ น้ำหนัก (กก.)</div>
+              ${trendHtml}
             </div>
           </div>
           ${timeHtml}
@@ -179,16 +191,30 @@
         const user = await response.json();
         
         if (user) {
-          isRegistered = true; savedFirstName = user.firstName; savedLastName = user.lastName;
+          isRegistered = true; 
+          savedFirstName = user.firstName; 
+          savedLastName = user.lastName;
+          window.userData = user; // เก็บข้อมูลชั่วคราวไว้ใช้ตอนกดส่ง
+
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>`;
+          
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
-            // ส่งค่า weight เข้าไปทำงานในฟังก์ชันสร้าง HTML
-            document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime);
+            document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime, user.trend);
           } else { 
             document.getElementById('form-section').style.display = "block"; 
-            document.getElementById('daily-weight-section').style.display = "block";
+            
+            // 🌟 ตรรกะใหม่: โชว์กล่องอัปเดตน้ำหนักเฉพาะวันที่ 1-7 และถ้ายังไม่เคยกดส่งในเดือนนี้
+            const todayDate = new Date().getDate();
+            const isUpdateWindow = todayDate >= 1 && todayDate <= 7;
+            
+            if (isUpdateWindow && !user.hasUpdatedWeightThisMonth) {
+               document.getElementById('daily-weight-section').style.display = "block";
+            } else {
+               document.getElementById('daily-weight-section').style.display = "none";
+               document.getElementById('dailyWeight').value = ""; // เคลียร์ค่าออก
+            }
           }
         } else {
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
@@ -208,9 +234,14 @@
       const stepInput = document.getElementById('stepCount').value.trim();
 
       let isMissingData = false;
-      if (!stepInput || !weightVal) isMissingData = true;
-      if (!isRegistered && (!empIdVal || !fName || !lName || !heightVal)) isMissingData = true;
+      if (!stepInput) isMissingData = true;
+      if (!isRegistered && (!empIdVal || !fName || !lName || !heightVal || !weightVal)) isMissingData = true;
       if (!isRegistered && selectedUserType === "team" && !teamNameVal) isMissingData = true;
+      
+      // 🌟 บังคับกรอกน้ำหนักถ้าอยู่ในช่วง 1-7 และช่องยังโชว์อยู่
+      if (isRegistered && document.getElementById('daily-weight-section').style.display === "block" && !weightVal) {
+          isMissingData = true;
+      }
 
       if (isMissingData) {
         return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลให้ครบถ้วนทุกช่องครับ', confirmButtonColor: '#1976D2' });
@@ -224,6 +255,15 @@
       document.getElementById('syncBtn').disabled = true;
       document.getElementById('status-text').style.color = "var(--primary)";
       document.getElementById('status-text').innerText = "⏳ กำลังบันทึกข้อมูล...";
+      
+      // คำนวณเทรนด์ตอนกดส่ง เพื่อโชว์ในกล่องผลลัพธ์ทันที
+      let finalTrend = 0;
+      if (isRegistered) {
+         finalTrend = window.userData.trend; 
+         if (weightVal && parseFloat(weightVal) !== window.userData.lastKnownWeight) {
+             finalTrend = parseFloat(weightVal) - window.userData.lastKnownWeight;
+         }
+      }
       
       const payload = {
         action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
@@ -239,8 +279,8 @@
             document.getElementById("form-section").style.display = "none";
             document.getElementById("appDescription").style.display = "none";
             document.getElementById("result-section").style.display = "block";
-            // อัปเดตการแสดงผลเมื่อส่งสำเร็จ ให้แสดงค่า weight ด้วย
-            document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "");
+            // ส่งค่าไปพ่นกล่องสีฟ้า
+            document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend);
             document.getElementById('status-text').innerText = "";
             Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
         } 
