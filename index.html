@@ -253,11 +253,16 @@
           window.userData = user; 
           selectedUserType = user.userType;
 
-          // 🌟 เช็คและแสดงป้ายกำกับประเภทผู้ใช้ + ป้ายร่วมแข่งลดน้ำหนัก (ถ้ามี)
           let displayType = user.userType === 'team' ? `👥 ประเภททีม: ${user.teamName}` : `👤 ประเภทบุคคล`;
-          let weightCompBadge = (user.userType === 'individual' && user.weightLossStatus === 'เข้าร่วม') ? `<br><span style="font-size: 13px; color: #E65100; background-color: #FFF3E0; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-top: 5px; font-weight: 500;">🏆 เข้าร่วมแข่งลดน้ำหนัก</span>` : "";
+          let weightCompBadge = (user.userType === 'individual' && user.weightLossStatus === 'เข้าร่วม') ? `<span style="font-size: 13px; color: #E65100; background-color: #FFF3E0; padding: 3px 10px; border-radius: 12px; display: inline-block; font-weight: 500;">🏆 เข้าร่วมแข่งลดน้ำหนัก</span>` : "";
           
-          document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span><br><span style="font-size: 13px; color: #1565C0; background-color: #E3F2FD; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-top: 5px; font-weight: 500;">${displayType}</span>${weightCompBadge}`;
+          // 🌟 ปรับให้ป้ายกำกับมาอยู่ในบรรทัดเดียวกันด้วย Flexbox
+          document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>
+          <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+            <span style="font-size: 13px; color: #1565C0; background-color: #E3F2FD; padding: 3px 10px; border-radius: 12px; display: inline-block; font-weight: 500;">${displayType}</span>
+            ${weightCompBadge}
+          </div>`;
+
           document.getElementById('syncBtn').innerText = "บันทึกข้อมูล";
           
           if (user.hasSubmittedToday) {
