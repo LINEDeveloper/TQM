@@ -31,6 +31,10 @@
     .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
     
     .blue-theme-popup { border-radius: 20px !important; padding: 1.5rem !important; background-color: #F0F8FF !important; }
+    
+    /* 🌟 สไตล์พิเศษสำหรับ Pop-up ยืนยันการส่งข้อมูล (เต็มจอ) */
+    .fullscreen-theme-popup { width: 100vw !important; max-width: 100vw !important; height: 100vh !important; margin: 0 !important; border-radius: 0 !important; background-color: #F0F8FF !important; display: flex !important; flex-direction: column; justify-content: center; box-sizing: border-box; padding: 2rem !important; }
+    
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
     
@@ -49,7 +53,6 @@
       box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
     }
 
-    /* 🌟 ปรับสีพื้นหลังหน้าจอโหลดให้โปร่งใส 80% */
     #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
     .spinner { border: 6px solid #E3F2FD; border-top: 6px solid #1976D2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -399,7 +402,8 @@
         confirmButtonText: 'ยืนยันการส่ง', 
         cancelButtonText: 'ยกเลิก', 
         reverseButtons: true, 
-        customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', confirmButton: 'blue-theme-confirm-btn', cancelButton: 'blue-theme-confirm-btn' }
+        // 🌟 เปลี่ยนคลาส popup เป็น fullscreen-theme-popup เพื่อให้แสดงผลเต็มจอ
+        customClass: { popup: 'fullscreen-theme-popup', title: 'blue-theme-title', confirmButton: 'blue-theme-confirm-btn', cancelButton: 'blue-theme-confirm-btn' }
       }).then(async (result) => { 
         if (result.isConfirmed) {
             
