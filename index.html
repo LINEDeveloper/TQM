@@ -131,7 +131,7 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" id="leaderboardBtn" class="btn-gold-shine">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" id="leaderboardBtn" class="btn-gold-shine">🏆 ดูอันดับ</a>
     </div>
   </div>
 
@@ -256,7 +256,6 @@
           let displayType = user.userType === 'team' ? `👥 ประเภททีม: ${user.teamName}` : `👤 ประเภทบุคคล`;
           let weightCompBadge = (user.userType === 'individual' && user.weightLossStatus === 'เข้าร่วม') ? `<span style="font-size: 13px; color: #E65100; background-color: #FFF3E0; padding: 3px 10px; border-radius: 12px; display: inline-block; font-weight: 500;">🏆 เข้าร่วมแข่งลดน้ำหนัก</span>` : "";
           
-          // 🌟 ปรับให้ป้ายกำกับมาอยู่ในบรรทัดเดียวกันด้วย Flexbox
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>
           <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
             <span style="font-size: 13px; color: #1565C0; background-color: #E3F2FD; padding: 3px 10px; border-radius: 12px; display: inline-block; font-weight: 500;">${displayType}</span>
@@ -277,10 +276,11 @@
             
             document.getElementById('leaderboardBtn').style.display = "none";
             
+            // 🌟 เปลี่ยนเครื่องหมายถูกเป็น SVG แบบเรียบๆ สวยๆ
             document.getElementById('step-result').innerHTML = `
               <div class="step-result-card" style="text-align: center; padding: 35px 15px;">
                 <div style="display: inline-flex; justify-content: center; align-items: center; width: 64px; height: 64px; border-radius: 50%; background-color: #4CAF50; border: 3px solid #FFFFFF; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 15px;">
-                  <span style="color: white; font-size: 36px; font-weight: bold;">✓</span>
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
                 <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif;">ลงทะเบียนเรียบร้อย!</div>
                 <div style="font-size: 15px; color: #E3F2FD; margin-top: 10px; line-height: 1.6;">
