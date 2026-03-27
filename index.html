@@ -2,88 +2,47 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ภารกิจพิชิต 1200 ล้านก้าว</title>
+  <title>TQM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
-  
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
   <style>
     :root { --primary: #1976D2; --primary-dark: #1565C0; --bg-color: #E3F2FD; --card-bg: #FFFFFF; --text-main: #333; --text-sub: #666; }
     body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
-    .card { background: var(--card-bg); padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; box-sizing: border-box; transition: all 0.3s ease; }
-    
+    .card { background: var(--card-bg); padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; box-sizing: border-box; }
     h2 { font-family: 'Kanit', sans-serif; text-align: center; color: var(--primary); margin: 0 0 5px 0; font-size: 24px;}
     .app-desc { font-size: 13px; color: var(--text-sub); text-align: center; margin-bottom: 20px; background: #F0F4F8; padding: 12px; border-radius: 8px; line-height: 1.5; }
-    
     input { width: 100%; padding: 14px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: border 0.3s ease; }
     input:focus { border: 2px solid var(--primary); outline: none; }
-    input[type="file"] { padding: 12px; font-size: 14px; background: #f9f9f9; cursor: pointer;}
     .input-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 5px; text-align: left; }
-    
-    .sync-btn { width: 100%; padding: 15px; color: white; background-color: var(--primary); border: none; border-radius: 10px; font-size: 16px; font-weight: 600; font-family: 'Kanit', sans-serif; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(25,118,210,0.2); transition: all 0.2s ease; }
-    .sync-btn:disabled { background-color: #ccc; box-shadow: none; cursor: not-allowed;}
-    
+    .sync-btn { width: 100%; padding: 15px; color: white; background-color: var(--primary); border: none; border-radius: 10px; font-size: 16px; font-weight: 600; font-family: 'Kanit', sans-serif; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(25,118,210,0.2); }
     .btn-line { background-color: #00B900; box-shadow: 0 4px 10px rgba(0,185,0,0.3); }
-    .btn-close { background-color: #f1f3f4; color: #333; box-shadow: none; margin-top: 10px; font-weight: 500; font-size: 14px;}
-    
-    /* ปุ่มเลือกประเภท */
     .btn-type-indiv { background-color: #1976D2; margin-bottom: 10px; }
     .btn-type-team { background-color: #F57C00; }
-
     #status-text { text-align: center; font-size: 14px; margin-top: 15px; font-weight: 600;}
     .logo-header { text-align: center; margin-bottom: 15px; }
     .logo-header img { max-width: 120px; height: auto; }
-    
     .profile-container { text-align: center; margin-bottom: 20px; }
     .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 15px rgba(25,118,210,0.2); background-color: #f0f0f0; display: none; margin: 0 auto 10px auto; }
     .welcome-text { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .welcome-name { color: var(--primary); font-size: 20px; font-family: 'Kanit', sans-serif; }
-    
     .footer { text-align: center; font-size: 13px; color: var(--text-sub); margin-top: 25px; line-height: 1.6; }
-    .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-
-    .blue-theme-popup { border-radius: 20px !important; padding: 1.5rem !important; background-color: #F0F8FF !important; font-family: 'Sarabun', sans-serif !important; }
+    .blue-theme-popup { border-radius: 20px !important; padding: 1.5rem !important; background-color: #F0F8FF !important; }
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
-    .blue-theme-content { font-family: 'Sarabun', sans-serif !important; color: #555 !important; font-size: 15px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
-
-    .btn-gold-shine {
-      position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); 
-      color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4);
-    }
-    .btn-gold-shine::after {
-      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg); animation: shine 3s infinite; 
-    }
-    @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
-
-    .step-result-card {
-      background-color: #1976D2; 
-      background-image:
-        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZD0iTTUwIDQwTDYwIDUwQzYwIDU1IDUwIDYwIDQwIDUwTDMwIDQwTDQwIDMzQzQwIDI4IDUwIDI4IDYwIDMzTDcwIDQwWSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48cGF0aCBkPSJNMzAgODBMNDAgOTBDNDAgOTUgMzAgMTAwIDIwIDkwTDEwIDgwTDE4IDczQzE4IDY4IDI4IDY4IDM4IDczTDQ4IDgwWiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsLTEwKSIsIHNjYWxlPSIwLjU5Ii8+PHBhdGggZD0iTTQwIDYwTDUwIDcwQzUwIDc1IDQwIDgwIDMwIDcwTDIwIDYwTDI4IDUzQzI4IDQ4IDM4IDQ4IDQ4IDUzTDYwIDYwWiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDcpIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1LC0zMCkiLz48L3N2Zz4="),
-        linear-gradient(135deg, #1976D2, #1565C0);
-      background-repeat: repeat, no-repeat;
-      background-size: auto, cover;
-      border: none;
-      padding: 25px 15px;
-      border-radius: 20px;
-      margin: 15px 0;
-      box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
-      position: relative;
-    }
+    .btn-gold-shine { position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4); text-decoration:none; box-sizing: border-box; display:inline-block; margin-top:10px; padding:15px; width:100%; text-align:center; font-family: 'Kanit', sans-serif; font-weight: 600; border-radius: 10px;}
+    .step-result-card { background-color: #1976D2; background-image: linear-gradient(135deg, #1976D2, #1565C0); padding: 25px 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3); }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="logo-header"><img src="https://img2.pic.in.th/tqm-og-image-removebg-preview_0.png" alt="Channel Academy Logo"></div>
-    <h2 id="main-title">ภารกิจพิชิต 1200 ล้านก้าว</h2>
-    <div class="app-desc" id="appDescription">กิจกรรมส่งเสริมสุขภาพพนักงาน<br>กรุณากรอกยอดก้าวเดินและแนบรูปภาพเพื่อสะสมคะแนน</div>
+    <div class="logo-header"><img src="https://www.tqmalpha.com/storage/logo/logo-tqm-blue.svg" alt="Logo"></div>
+    <h2 id="main-title">ภารกิจพิชิต 1,200 ล้านก้าว</h2>
+    <div class="app-desc" id="appDescription">กิจกรรมส่งเสริมสุขภาพพนักงาน<br>กรุณากรอกยอดก้าวเดินเพื่อสะสมคะแนน</div>
     
     <div class="profile-container" id="profile-container" style="display: none;">
-      <img id="userProfilePic" class="profile-pic" src="" alt="LINE Profile">
+      <img id="userProfilePic" class="profile-pic" src="">
       <div id="welcome-text" class="welcome-text">กำลังตรวจสอบข้อมูล...</div>
     </div>
     
@@ -91,21 +50,18 @@
 
     <div id="type-selection-section" style="display: none; text-align: center; margin-bottom: 20px;">
       <h3 style="color: var(--primary); font-family: 'Kanit', sans-serif; margin-bottom: 15px;">เลือกประเภทการสมัคร</h3>
-      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">สมัครประเภทบุคคล</button>
-      <button class="sync-btn btn-type-team" onclick="selectType('team')">สมัครประเภททีม 5 คน</button>
+      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">👤 สมัครประเภทบุคคล</button>
+      <button class="sync-btn btn-type-team" onclick="selectType('team')">👥 สมัครประเภททีม (4 คน)</button>
     </div>
 
     <div id="form-section" style="display: none;">
       <div id="register-section" style="display: none;">
-        
         <div id="team-name-container" style="display: none; background: #FFF3E0; padding: 12px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #FFE0B2;">
-          <label class="input-label" style="color: #E65100;">ตั้งชื่อทีม (พิมพ์ให้เหมือนกับเพื่อนในทีมเป๊ะๆ)</label>
-          <input type="text" id="teamName" placeholder="เช่น ทีมสายลุย" style="margin-bottom: 5px;">
+          <label class="input-label" style="color: #E65100;">ตั้งชื่อทีม (พิมพ์ให้ตรงกับเพื่อนเป๊ะๆ)</label>
+          <input type="text" id="teamName" placeholder="เช่น ทีมสายลุย">
         </div>
-
         <label class="input-label">รหัสพนักงาน</label>
         <input type="text" id="empId" placeholder="เช่น 12345">
-        
         <label class="input-label">ชื่อจริง (ไม่ต้องใส่คำนำหน้า)</label>
         <input type="text" id="firstName" placeholder="ชื่อจริง">
         <label class="input-label">นามสกุล</label>
@@ -124,31 +80,25 @@
         <input type="number" id="dailyWeight" placeholder="เช่น 65" step="0.1">
       </div>
 
-      <label class="input-label">อัปโหลดรูปภาพหลักฐาน</label>
-      <input type="file" id="proofImage" accept="image/*" required>
-      
-      <button class="sync-btn" onclick="submitData()" id="syncBtn">ส่งหลักฐานและบันทึกข้อมูล</button>
+      <button class="sync-btn" onclick="submitData()" id="syncBtn">บันทึกข้อมูล</button>
       <div id="status-text"></div>
     </div>
 
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="sync-btn btn-gold-shine" style="display:inline-block; text-decoration:none; box-sizing: border-box;">🏆 ดูอันดับความฟิต</a>
+      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="btn-gold-shine">🏆 ดูอันดับความฟิต</a>
     </div>
   </div>
 
   <div class="footer">
-    บริษัท ทีคิวเอ็ม อินชัวร์รันส์ โบรคเกอร์ จำกัด<br>
-    <a href="privacy.html" target="_blank">นโยบายความเป็นส่วนตัว (Privacy Policy)</a>
+    บริษัท ทีคิวเอ็ม อินชัวร์รันส์ โบรคเกอร์ จำกัด
   </div>
 
   <script>
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrVlxtauXbluDvfbEWL-ly8_w74XQqeuWkeXB5frCADf8rYIh7VLFzSAPuo5M6BFla_g/exec';
     const LIFF_ID = '2009549576-6bsF9G5Z'; 
     let lineUserId = "Unknown", isRegistered = false, savedFirstName = "", savedLastName = "", savedPicUrl = "";
-    
-    // 🌟 ตัวแปรเก็บประเภทการสมัคร
     let selectedUserType = "individual"; 
 
     async function main() {
@@ -169,88 +119,59 @@
     }
     window.onload = main;
 
-    function closeLiff() {
-      if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
-    }
-
-    // 🌟 ฟังก์ชันจัดการปุ่มเลือกประเภท
     function selectType(type) {
       selectedUserType = type;
       document.getElementById('type-selection-section').style.display = "none";
       document.getElementById('form-section').style.display = "block";
       document.getElementById('register-section').style.display = "block";
-      
-      if (type === "team") {
-        document.getElementById('team-name-container').style.display = "block";
-      } else {
-        document.getElementById('team-name-container').style.display = "none";
-      }
+      document.getElementById('team-name-container').style.display = type === "team" ? "block" : "none";
     }
 
     function buildResultHTML(steps, weight, totalSteps, submitTime) {
       let displaySteps = steps ? steps.toLocaleString() : "0";
-      let displayWeight = weight ? parseFloat(weight).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
       let displayTotalSteps = totalSteps ? totalSteps.toLocaleString() : "0";
-      let timeHtml = submitTime ? `<div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center; font-weight: 300;">อัปเดตล่าสุด: ${submitTime} น.</div>` : "";
+      let timeHtml = submitTime ? `<div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center;">อัปเดตล่าสุด: ${submitTime} น.</div>` : "";
 
       return `
         <div class="step-result-card">
           <div style="font-size: 15px; color: #E3F2FD; margin-bottom: 15px; font-weight: 500; text-align: center;">สรุปผลการเดินวันนี้</div>
-          <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 5px;">
-            <div style="text-align: center; width: 45%;">
-              <div style="font-size: 32px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displaySteps}</div>
-              <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">👣 ก้าวเดิน</div>
-            </div>
-            <div style="width: 1px; height: 40px; background-color: rgba(255,255,255,0.3);"></div>
-            <div style="text-align: center; width: 45%;">
-              <div style="font-size: 32px; font-weight: bold; color: #FFD54F; font-family: 'Kanit', sans-serif; line-height: 1;">${displayWeight}</div>
-              <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">⚖️ น้ำหนักปัจจุบัน (กก.)</div>
-            </div>
+          <div style="text-align: center;">
+            <div style="font-size: 36px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displaySteps}</div>
+            <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">👣 ก้าวเดิน</div>
           </div>
           ${timeHtml}
-
           <div style="background: rgba(255, 255, 255, 0.15); padding: 15px; border-radius: 12px; margin-top: 15px;">
             <div style="font-size: 13px; color: #FFFFFF; margin-bottom: 12px; font-weight: 500; text-align: center;">🏆 ยอดสะสมรวมทั้งหมด</div>
             <div style="text-align: center;">
-              <div style="font-size: 24px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displayTotalSteps}</div>
+              <div style="font-size: 24px; font-weight: bold; color: #FFD54F; font-family: 'Kanit', sans-serif;">${displayTotalSteps}</div>
               <div style="font-size: 13px; color: #E3F2FD; margin-top: 4px;">รวมก้าวเดิน</div>
             </div>
           </div>
         </div>
-        <div style="color:#666; font-size:14px; margin-bottom: 15px;">บันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น<br>พรุ่งนี้อย่าลืมมาส่งใหม่นะ ✌️</div>
       `;
     }
 
     async function checkUserInDatabase(uid) {
       try {
         const response = await fetch(GAS_WEB_APP_URL, { 
-          method: 'POST', redirect: 'follow',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'checkUser', uid: uid }) 
+          method: 'POST', redirect: 'follow', body: JSON.stringify({ action: 'checkUser', uid: uid }) 
         });
         const user = await response.json();
         
         if (user) {
           isRegistered = true; savedFirstName = user.firstName; savedLastName = user.lastName;
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>`;
-          
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
-            
-            document.getElementById('step-result').innerHTML = buildResultHTML(
-              user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime
-            );
+            document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime);
           } else { 
-            // เคยลงทะเบียนแล้ว ข้ามไปหน้ากรอกรายวันเลย
             document.getElementById('form-section').style.display = "block"; 
             document.getElementById('daily-weight-section').style.display = "block";
           }
         } else {
-          // 🌟 กรณีพนักงานใหม่: โชว์ปุ่มเลือกประเภทก่อน และซ่อนฟอร์มไปก่อน
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
           document.getElementById('type-selection-section').style.display = "block";
-          document.getElementById('daily-weight-section').style.display = "none";
         }
       } catch (error) { document.getElementById('welcome-text').innerText = "เชื่อมต่อระบบฐานข้อมูลไม่สำเร็จ"; }
     }
@@ -260,90 +181,64 @@
       let fName = isRegistered ? savedFirstName : document.getElementById('firstName').value.trim();
       let lName = isRegistered ? savedLastName : document.getElementById('lastName').value.trim();
       let heightVal = isRegistered ? "" : document.getElementById('height').value.trim();
-      
       let teamNameVal = isRegistered ? "" : document.getElementById('teamName').value.trim();
       let weightVal = isRegistered ? document.getElementById('dailyWeight').value.trim() : document.getElementById('weight').value.trim();
       
       const stepInput = document.getElementById('stepCount').value.trim();
-      const fileInput = document.getElementById('proofImage');
 
+      // เอาการบังคับไฟล์รูปออกแล้ว
       let isMissingData = false;
-      if (!stepInput || !weightVal || fileInput.files.length === 0) isMissingData = true;
+      if (!stepInput || !weightVal) isMissingData = true;
       if (!isRegistered && (!empIdVal || !fName || !lName || !heightVal)) isMissingData = true;
-      // เช็คถ้าเลือกแบบทีม ต้องกรอกชื่อทีมด้วย
       if (!isRegistered && selectedUserType === "team" && !teamNameVal) isMissingData = true;
 
       if (isMissingData) {
-        return Swal.fire({ 
-          icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลและแนบรูปภาพให้ครบถ้วนทุกช่องครับ', 
-          confirmButtonText: 'ตกลง', confirmButtonColor: '#1976D2',
-          customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', htmlContainer: 'blue-theme-content', confirmButton: 'blue-theme-confirm-btn' }
-        });
+        return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลให้ครบถ้วนทุกช่องครับ', confirmButtonColor: '#1976D2' });
       }
       
       const steps = parseInt(stepInput);
       if (steps < 7000) {
-        return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว พยายามเดินให้ถึงเป้าหมายแล้วมาส่งใหม่นะ ✌️', confirmButtonColor: '#FF9800' });
+        return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว ✌️', confirmButtonColor: '#FF9800' });
       }
 
-      Swal.fire({
-        title: 'ยืนยันการส่งข้อมูล',
-        html: '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>',
-        icon: 'info', showCancelButton: true, confirmButtonColor: '#1976D2', cancelButtonColor: '#d33', confirmButtonText: 'ยืนยันการส่ง', cancelButtonText: 'ยกเลิก', reverseButtons: true, 
-        customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', confirmButton: 'blue-theme-confirm-btn', cancelButton: 'blue-theme-confirm-btn' }
-      }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('syncBtn').disabled = true;
-            document.getElementById('status-text').style.color = "var(--primary)";
-            document.getElementById('status-text').innerText = "⏳ กำลังอัปโหลดรูปภาพและบันทึกข้อมูล...";
+      document.getElementById('syncBtn').disabled = true;
+      document.getElementById('status-text').style.color = "var(--primary)";
+      document.getElementById('status-text').innerText = "⏳ กำลังบันทึกข้อมูล...";
+      
+      const payload = {
+        action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
+        weight: weightVal, height: heightVal, steps: steps, 
+        userType: selectedUserType, teamName: teamNameVal,
+        pictureUrl: savedPicUrl
+      };
 
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const base64Data = e.target.result.split(',')[1]; 
-                
-                const payload = {
-                  action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
-                  weight: weightVal, height: heightVal, steps: steps, 
-                  userType: selectedUserType, teamName: teamNameVal, // 🌟 ส่งประเภทและชื่อทีมไปด้วย
-                  pictureUrl: savedPicUrl, imageFile: base64Data, mimeType: file.type, fileName: lineUserId + "_" + Date.now() + "_" + file.name 
-                };
-
-                fetch(GAS_WEB_APP_URL, { 
-                  method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) 
-                })
-                .then(res => res.json())
-                .then(res => {
-                if (res.status === "success") {
-                    document.getElementById("form-section").style.display = "none";
-                    document.getElementById("appDescription").style.display = "none";
-                    document.getElementById("result-section").style.display = "block";
-                    
-                    document.getElementById("result-title").style.display = "block";
-                    document.getElementById("result-title").innerText = "🎉 ยินดีด้วย!";
-                    document.getElementById("result-title").style.fontFamily = "'Kanit', sans-serif";
-                    document.getElementById("result-title").style.fontWeight = "600";
-                    document.getElementById("result-title").style.color = "var(--primary)";
-                    document.getElementById("result-title").style.fontSize = "24px";
-                    
-                    document.getElementById("step-result").innerHTML = buildResultHTML(
-                      res.steps, res.weight, res.totalSteps, ""
-                    );
-
-                    document.getElementById('status-text').innerText = "";
-                    Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000, customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title' } });
-                } 
-                else if (res.status === "already_submitted") { 
-                    Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งยอดก้าวเดินของวันนี้ไปแล้วครับ บันทึกข้อมูลได้วันละ 1 ครั้งเท่านั้น', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
-                }
-                }).catch(err => { 
-                Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว กรุณาลองใหม่', confirmButtonColor: '#d33' });
-                document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
-                });
-            };
-            reader.readAsDataURL(file);
+      fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === "success") {
+            document.getElementById("form-section").style.display = "none";
+            document.getElementById("appDescription").style.display = "none";
+            document.getElementById("result-section").style.display = "block";
+            document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "");
+            document.getElementById('status-text').innerText = "";
+            Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
+        } 
+        // 🌟 แจ้งเตือนครบ 50 ทีมแล้ว
+        else if (res.status === "max_teams_reached") {
+            Swal.fire({ icon: 'error', title: 'โควตาเต็มแล้ว', text: 'ประเภททีมจำนวน 50 ทีม เต็มแล้ว ขอบคุณที่สนใจในการสมัคร ไว้โอกาสหน้าร่วมสนุกกันใหม่', confirmButtonColor: '#d33' });
+            document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
         }
+        // 🌟 แจ้งเตือนทีมนี้ครบ 4 คนแล้ว
+        else if (res.status === "team_full") { 
+            Swal.fire({ icon: 'error', title: 'ทีมนี้เต็มแล้ว!', text: 'ภายชื่อทีมนี้มีสมาชิกครบ 4 คนแล้วครับ ต้องหาทีมใหม่หรือตั้งชื่อทีมอื่น', confirmButtonColor: '#d33' });
+            document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
+        }
+        else if (res.status === "already_submitted") { 
+            Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งข้อมูลของวันนี้ไปแล้วครับ', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
+        }
+      }).catch(err => { 
+        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว', confirmButtonColor: '#d33' });
+        document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
       });
     }
   </script>
