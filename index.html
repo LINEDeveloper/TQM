@@ -37,6 +37,9 @@
     .step-alert-popup { border-radius: 30px !important; padding: 2rem !important; background-color: #F0F8FF !important; border: 3px solid #BBDEFB !important; }
     .step-alert-btn { border-radius: 50px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 35px !important; font-size: 16px !important; box-shadow: 0 4px 10px rgba(25,118,210,0.3) !important; }
 
+    /* 🌟 สไตล์พิเศษสำหรับ Pop-up บันทึกสำเร็จ (เล็ก มน ธีมฟ้า) */
+    .success-alert-popup { border-radius: 30px !important; padding: 1.5rem !important; background-color: #E3F2FD !important; border: 2px solid #90CAF9 !important; width: 280px !important; box-shadow: 0 8px 20px rgba(25,118,210,0.2) !important; }
+
     .btn-gold-shine { position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4); text-decoration:none; box-sizing: border-box; display:inline-block; margin-top:10px; padding:15px; width:100%; text-align:center; font-family: 'Kanit', sans-serif; font-weight: 600; border-radius: 10px;}
     
     .step-result-card {
@@ -219,7 +222,6 @@
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
-            // 🌟 แสดงปุ่ม Leaderboard ตามปกติ
             document.getElementById('leaderboardBtn').style.display = "inline-block";
             document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime, user.trend, user.userType, user.teamTotalSteps);
           } 
@@ -227,7 +229,6 @@
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
             
-            // 🌟 ซ่อนปุ่ม Leaderboard เฉพาะหน้าลงทะเบียนสำเร็จครั้งแรก
             document.getElementById('leaderboardBtn').style.display = "none";
             
             document.getElementById('step-result').innerHTML = `
@@ -375,11 +376,22 @@
                       document.getElementById("form-section").style.display = "none";
                       document.getElementById("appDescription").style.display = "none";
                       document.getElementById("result-section").style.display = "block";
-                      // 🌟 แสดงปุ่ม Leaderboard หลังจากบันทึกข้อมูลปกติสำเร็จ
                       document.getElementById('leaderboardBtn').style.display = "inline-block";
                       document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend, selectedUserType, res.teamTotalSteps);
                       document.getElementById('status-text').innerText = "";
-                      Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
+                      
+                      // 🌟 แสดง Pop-up บันทึกสำเร็จแบบกะทัดรัด ขอบมน ธีมฟ้า
+                      Swal.fire({ 
+                          icon: 'success', 
+                          iconColor: '#1976D2', // เปลี่ยนสีไอคอนถูกเป็นสีฟ้า
+                          title: 'บันทึกสำเร็จ', 
+                          showConfirmButton: false, 
+                          timer: 2000,
+                          customClass: { 
+                              popup: 'success-alert-popup', 
+                              title: 'blue-theme-title' 
+                          } 
+                      });
                   }
               } 
               else if (res.status === "max_teams_reached") {
