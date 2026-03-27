@@ -49,8 +49,8 @@
       box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
     }
 
-    /* 🌟 สไตล์หน้าจอโหลดแบบใหม่ (เต็มจอ) */
-    #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #FFFFFF; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+    /* 🌟 ปรับสีพื้นหลังหน้าจอโหลดให้โปร่งใส 50% */
+    #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
     .spinner { border: 6px solid #E3F2FD; border-top: 6px solid #1976D2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .loading-text { font-family: 'Kanit', sans-serif; color: #1976D2; font-size: 18px; font-weight: 500; }
@@ -404,7 +404,6 @@
         if (result.isConfirmed) {
             
             document.getElementById('syncBtn').disabled = true;
-            // 🌟 แสดงหน้าจอโหลดสีขาว วงกลมสีฟ้า
             document.getElementById('loading-overlay').style.display = "flex";
             
             let finalTrend = 0;
@@ -449,7 +448,6 @@
             fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(res => {
-              // 🌟 ซ่อนหน้าจอโหลดเมื่อได้รับคำตอบกลับมา
               document.getElementById('loading-overlay').style.display = "none";
 
               if (res.status === "success") {
