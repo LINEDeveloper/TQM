@@ -64,8 +64,8 @@
 
     <div id="type-selection-section" style="display: none; text-align: center; margin-bottom: 20px;">
       <h3 style="color: var(--primary); font-family: 'Kanit', sans-serif; margin-bottom: 15px;">เลือกประเภทการสมัคร</h3>
-      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">👤 สมัครประเภทบุคคล</button>
-      <button class="sync-btn btn-type-team" onclick="selectType('team')">👥 สมัครประเภททีม (4 คน)</button>
+      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">สมัครประเภทบุคคล</button>
+      <button class="sync-btn btn-type-team" onclick="selectType('team')">สมัครประเภททีม (4 คน)</button>
       <div style="font-size: 12px; color: #E65100; margin-top: 8px; font-weight: 500;">*จำนวนแค่ 50 ทีม เท่านั้น</div>
     </div>
 
@@ -211,9 +211,24 @@
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
             document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime, user.trend);
-          } else { 
+          } 
+          // 🌟 เช็คว่าถ้าเป็นคนเพิ่งลงทะเบียนมาวันนี้ ให้โชว์กล่องบอกให้เริ่มส่งพรุ่งนี้
+          else if (user.registeredToday) {
+            document.getElementById('appDescription').style.display = "none";
+            document.getElementById('result-section').style.display = "block";
+            document.getElementById('step-result').innerHTML = `
+              <div class="step-result-card" style="text-align: center; padding: 35px 15px;">
+                <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+                <div style="font-size: 22px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif;">ลงทะเบียนเรียบร้อย!</div>
+                <div style="font-size: 15px; color: #E3F2FD; margin-top: 10px; line-height: 1.6;">
+                  คุณสามารถเริ่มส่งยอดเฉลี่ยก้าวเดินต่อวัน<br>
+                  ได้ใน <b>วันถัดไป</b> นะครับ ✌️
+                </div>
+              </div>
+            `;
+          } 
+          else { 
             document.getElementById('form-section').style.display = "block"; 
-            // 🌟 คนที่ลงทะเบียนแล้ว ให้โชว์ช่องกรอกก้าวเดิน
             document.getElementById('daily-step-section').style.display = "block";
             
             const todayDate = new Date().getDate();
@@ -230,7 +245,6 @@
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนสมัครร่วมกิจกรรม</span>`;
           document.getElementById('type-selection-section').style.display = "block";
           document.getElementById('syncBtn').innerText = "ลงทะเบียน";
-          // 🌟 คนใหม่ซ่อนช่องก้าวเดิน
           document.getElementById('daily-step-section').style.display = "none";
         }
       } catch (error) { document.getElementById('welcome-text').innerText = "เชื่อมต่อระบบฐานข้อมูลไม่สำเร็จ"; }
@@ -249,7 +263,6 @@
       let isMissingData = false;
       let steps = 0;
       
-      // ตรวจสอบความครบถ้วนของข้อมูล
       if (isRegistered) {
          if (!stepInput) isMissingData = true;
          steps = parseInt(stepInput) || 0;
@@ -324,7 +337,7 @@
               weight: weightVal, height: heightVal, steps: steps, 
               userType: selectedUserType, teamName: teamNameVal,
               pictureUrl: savedPicUrl,
-              isRegistration: !isRegistered // ส่งค่าไปบอกระบบว่าเป็นผู้ใหม่ลงทะเบียน
+              isRegistration: !isRegistered 
             };
 
             fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
@@ -332,12 +345,12 @@
             .then(res => {
               if (res.status === "success") {
                   if (!isRegistered) {
-                      // 🌟 ถ้าเพิ่งลงทะเบียนเสร็จ ให้แจ้งเตือนสำเร็จแล้วโหลดหน้าใหม่เพื่อให้กรอกก้าวเดิน
+                      // 🌟 แจ้งเตือนเมื่อลงทะเบียนสำเร็จ ให้เริ่มส่งก้าวเดินในวันพรุ่งนี้ตามที่ต้องการ
                       Swal.fire({
                           icon: 'success',
                           title: 'ลงทะเบียนสำเร็จ!',
-                          text: 'คุณสามารถเริ่มส่งยอดก้าวเดินของวันนี้ได้เลยครับ',
-                          confirmButtonText: 'เริ่มส่งก้าวเดิน',
+                          text: 'คุณสามารถเริ่มส่งยอดเฉลี่ยก้าวเดินต่อวัน ในวันถัดไปนะครับ ✌️',
+                          confirmButtonText: 'ตกลง',
                           confirmButtonColor: '#1976D2',
                           customClass: { popup: 'step-alert-popup', title: 'blue-theme-title', confirmButton: 'step-alert-btn' }
                       }).then(() => { window.location.reload(); });
