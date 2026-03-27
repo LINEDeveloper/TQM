@@ -150,10 +150,10 @@
       document.getElementById('team-name-container').style.display = type === "team" ? "block" : "none";
     }
 
-    function buildResultHTML(steps, weight, totalSteps, submitTime, trend) {
+    // 🌟 รับค่า userType และ teamTotalSteps เพิ่มเข้ามา
+    function buildResultHTML(steps, weight, totalSteps, submitTime, trend, userType, teamTotalSteps) {
       let displaySteps = steps ? steps.toLocaleString() : "0";
       let displayWeight = weight ? parseFloat(weight).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
-      let displayTotalSteps = totalSteps ? totalSteps.toLocaleString() : "0";
       let timeHtml = submitTime ? `<div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center; font-weight: 300;">อัปเดตล่าสุด: ${submitTime} น.</div>` : "";
 
       let trendHtml = "";
@@ -164,6 +164,10 @@
       } else {
         trendHtml = `<div style="font-size: 12px; color: #E3F2FD; margin-top: 4px; font-weight: 300;">➖ คงที่</div>`;
       }
+
+      // 🌟 สลับข้อความและตัวเลข ถ้าเป็นประเภททีม
+      let displayTotalTitle = userType === 'team' ? "🏆 ยอดรวมสะสมทั้งหมดของทีม" : "🏆 ยอดสะสมรวมทั้งหมด";
+      let displayTotalSteps = userType === 'team' ? (teamTotalSteps ? teamTotalSteps.toLocaleString() : "0") : (totalSteps ? totalSteps.toLocaleString() : "0");
 
       return `
         <div class="step-result-card">
@@ -183,7 +187,7 @@
           ${timeHtml}
 
           <div style="background: rgba(255, 255, 255, 0.15); padding: 15px; border-radius: 12px; margin-top: 15px;">
-            <div style="font-size: 13px; color: #FFFFFF; margin-bottom: 12px; font-weight: 500; text-align: center;">🏆 ยอดสะสมรวมทั้งหมด</div>
+            <div style="font-size: 13px; color: #FFFFFF; margin-bottom: 12px; font-weight: 500; text-align: center;">${displayTotalTitle}</div>
             <div style="text-align: center;">
               <div style="font-size: 24px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displayTotalSteps}</div>
               <div style="font-size: 13px; color: #E3F2FD; margin-top: 4px;">รวมก้าวเดิน</div>
@@ -206,6 +210,7 @@
           savedFirstName = user.firstName; 
           savedLastName = user.lastName;
           window.userData = user; 
+          selectedUserType = user.userType; // เซ็ตค่า Type สำหรับใช้ตอนส่งข้อมูลใหม่
 
           let displayType = user.userType === 'team' ? `👥 ประเภททีม: ${user.teamName}` : `👤 ประเภทบุคคล`;
           
@@ -215,7 +220,8 @@
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
-            document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime, user.trend);
+            // ส่ง userType และ teamTotalSteps เข้าไปด้วย
+            document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime, user.trend, user.userType, user.teamTotalSteps);
           } 
           else if (user.registeredToday) {
             document.getElementById('appDescription').style.display = "none";
@@ -261,8 +267,6 @@
       let heightVal = isRegistered ? "" : document.getElementById('height').value.trim();
       let teamNameVal = isRegistered ? "" : document.getElementById('teamName').value.trim();
       let weightVal = isRegistered ? document.getElementById('dailyWeight').value.trim() : document.getElementById('weight').value.trim();
-      
-      // 🌟 ดึงค่าเฉลี่ยก้าวเดินเฉพาะตอนลงทะเบียนใหม่
       let avgStepsVal = isRegistered ? "" : document.getElementById('avgSteps').value.trim(); 
       
       const stepInput = document.getElementById('stepCount').value.trim();
@@ -277,7 +281,6 @@
              isMissingData = true;
          }
       } else {
-         // 🌟 บังคับให้กรอกค่าเฉลี่ยตอนลงทะเบียนด้วย
          if (!empIdVal || !fName || !lName || !heightVal || !weightVal || !avgStepsVal) isMissingData = true;
          if (selectedUserType === "team" && !teamNameVal) isMissingData = true;
       }
@@ -346,7 +349,7 @@
               userType: selectedUserType, teamName: teamNameVal,
               pictureUrl: savedPicUrl,
               isRegistration: !isRegistered,
-              avgSteps: avgStepsVal // 🌟 แนบค่าเฉลี่ยส่งกลับไปหลังบ้าน
+              avgSteps: avgStepsVal 
             };
 
             fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
@@ -366,7 +369,8 @@
                       document.getElementById("form-section").style.display = "none";
                       document.getElementById("appDescription").style.display = "none";
                       document.getElementById("result-section").style.display = "block";
-                      document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend);
+                      // 🌟 รับค่า teamTotalSteps มาด้วย
+                      document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend, selectedUserType, res.teamTotalSteps);
                       document.getElementById('status-text').innerText = "";
                       Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
                   }
