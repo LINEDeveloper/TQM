@@ -137,14 +137,12 @@
       document.getElementById('team-name-container').style.display = type === "team" ? "block" : "none";
     }
 
-    // 🌟 ระบบสร้าง HTML และคำนวณลูกศรเทรนด์
     function buildResultHTML(steps, weight, totalSteps, submitTime, trend) {
       let displaySteps = steps ? steps.toLocaleString() : "0";
       let displayWeight = weight ? parseFloat(weight).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 1}) : "0";
       let displayTotalSteps = totalSteps ? totalSteps.toLocaleString() : "0";
       let timeHtml = submitTime ? `<div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center; font-weight: 300;">อัปเดตล่าสุด: ${submitTime} น.</div>` : "";
 
-      // ประมวลผลเทรนด์ (บวก=อ้วนขึ้น, ลบ=ผอมลง)
       let trendHtml = "";
       if (trend > 0) {
         trendHtml = `<div style="font-size: 12px; color: #FF8A65; margin-top: 4px; font-weight: 600;">📈 ขึ้น ${trend.toFixed(1)} กก.</div>`;
@@ -194,7 +192,7 @@
           isRegistered = true; 
           savedFirstName = user.firstName; 
           savedLastName = user.lastName;
-          window.userData = user; // เก็บข้อมูลชั่วคราวไว้ใช้ตอนกดส่ง
+          window.userData = user; 
 
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>`;
           
@@ -205,7 +203,6 @@
           } else { 
             document.getElementById('form-section').style.display = "block"; 
             
-            // 🌟 ตรรกะใหม่: โชว์กล่องอัปเดตน้ำหนักเฉพาะวันที่ 1-7 และถ้ายังไม่เคยกดส่งในเดือนนี้
             const todayDate = new Date().getDate();
             const isUpdateWindow = todayDate >= 1 && todayDate <= 7;
             
@@ -213,7 +210,7 @@
                document.getElementById('daily-weight-section').style.display = "block";
             } else {
                document.getElementById('daily-weight-section').style.display = "none";
-               document.getElementById('dailyWeight').value = ""; // เคลียร์ค่าออก
+               document.getElementById('dailyWeight').value = ""; 
             }
           }
         } else {
@@ -238,7 +235,6 @@
       if (!isRegistered && (!empIdVal || !fName || !lName || !heightVal || !weightVal)) isMissingData = true;
       if (!isRegistered && selectedUserType === "team" && !teamNameVal) isMissingData = true;
       
-      // 🌟 บังคับกรอกน้ำหนักถ้าอยู่ในช่วง 1-7 และช่องยังโชว์อยู่
       if (isRegistered && document.getElementById('daily-weight-section').style.display === "block" && !weightVal) {
           isMissingData = true;
       }
@@ -252,53 +248,69 @@
         return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว ✌️', confirmButtonColor: '#FF9800' });
       }
 
-      document.getElementById('syncBtn').disabled = true;
-      document.getElementById('status-text').style.color = "var(--primary)";
-      document.getElementById('status-text').innerText = "⏳ กำลังบันทึกข้อมูล...";
-      
-      // คำนวณเทรนด์ตอนกดส่ง เพื่อโชว์ในกล่องผลลัพธ์ทันที
-      let finalTrend = 0;
-      if (isRegistered) {
-         finalTrend = window.userData.trend; 
-         if (weightVal && parseFloat(weightVal) !== window.userData.lastKnownWeight) {
-             finalTrend = parseFloat(weightVal) - window.userData.lastKnownWeight;
-         }
-      }
-      
-      const payload = {
-        action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
-        weight: weightVal, height: heightVal, steps: steps, 
-        userType: selectedUserType, teamName: teamNameVal,
-        pictureUrl: savedPicUrl
-      };
+      // 🌟 ดึง Pop-up ยืนยันการบันทึกข้อมูลกลับมาครอบการส่ง API
+      Swal.fire({
+        title: 'ยืนยันการส่งข้อมูล',
+        html: '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>',
+        icon: 'info', 
+        showCancelButton: true, 
+        confirmButtonColor: '#1976D2', 
+        cancelButtonColor: '#d33', 
+        confirmButtonText: 'ยืนยันการส่ง', 
+        cancelButtonText: 'ยกเลิก', 
+        reverseButtons: true, 
+        customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', confirmButton: 'blue-theme-confirm-btn', cancelButton: 'blue-theme-confirm-btn' }
+      }).then((result) => {
+        if (result.isConfirmed) {
+            
+            document.getElementById('syncBtn').disabled = true;
+            document.getElementById('status-text').style.color = "var(--primary)";
+            document.getElementById('status-text').innerText = "⏳ กำลังบันทึกข้อมูล...";
+            
+            let finalTrend = 0;
+            if (isRegistered) {
+               finalTrend = window.userData.trend; 
+               if (weightVal && parseFloat(weightVal) !== window.userData.lastKnownWeight) {
+                   finalTrend = parseFloat(weightVal) - window.userData.lastKnownWeight;
+               }
+            }
+            
+            const payload = {
+              action: 'submitSteps', uid: lineUserId, empId: empIdVal, firstName: fName, lastName: lName, 
+              weight: weightVal, height: heightVal, steps: steps, 
+              userType: selectedUserType, teamName: teamNameVal,
+              pictureUrl: savedPicUrl
+            };
 
-      fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
-      .then(res => res.json())
-      .then(res => {
-        if (res.status === "success") {
-            document.getElementById("form-section").style.display = "none";
-            document.getElementById("appDescription").style.display = "none";
-            document.getElementById("result-section").style.display = "block";
-            // ส่งค่าไปพ่นกล่องสีฟ้า
-            document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend);
-            document.getElementById('status-text').innerText = "";
-            Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
-        } 
-        else if (res.status === "max_teams_reached") {
-            Swal.fire({ icon: 'error', title: 'โควตาเต็มแล้ว', text: 'ประเภททีมจำนวน 50 ทีม เต็มแล้ว ขอบคุณที่สนใจในการสมัคร ไว้โอกาสหน้าร่วมสนุกกันใหม่', confirmButtonColor: '#d33' });
-            document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
-        }
-        else if (res.status === "team_full") { 
-            Swal.fire({ icon: 'error', title: 'ทีมนี้เต็มแล้ว!', text: 'ภายชื่อทีมนี้มีสมาชิกครบ 4 คนแล้วครับ ต้องหาทีมใหม่หรือตั้งชื่อทีมอื่น', confirmButtonColor: '#d33' });
-            document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
-        }
-        else if (res.status === "already_submitted") { 
-            Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งข้อมูลของวันนี้ไปแล้วครับ', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
-        }
-      }).catch(err => { 
-        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว', confirmButtonColor: '#d33' });
-        document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
-      });
+            fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
+            .then(res => res.json())
+            .then(res => {
+              if (res.status === "success") {
+                  document.getElementById("form-section").style.display = "none";
+                  document.getElementById("appDescription").style.display = "none";
+                  document.getElementById("result-section").style.display = "block";
+                  document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend);
+                  document.getElementById('status-text').innerText = "";
+                  Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
+              } 
+              else if (res.status === "max_teams_reached") {
+                  Swal.fire({ icon: 'error', title: 'โควตาเต็มแล้ว', text: 'ประเภททีมจำนวน 50 ทีม เต็มแล้ว ขอบคุณที่สนใจในการสมัคร ไว้โอกาสหน้าร่วมสนุกกันใหม่', confirmButtonColor: '#d33' });
+                  document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
+              }
+              else if (res.status === "team_full") { 
+                  Swal.fire({ icon: 'error', title: 'ทีมนี้เต็มแล้ว!', text: 'ภายชื่อทีมนี้มีสมาชิกครบ 4 คนแล้วครับ ต้องหาทีมใหม่หรือตั้งชื่อทีมอื่น', confirmButtonColor: '#d33' });
+                  document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
+              }
+              else if (res.status === "already_submitted") { 
+                  Swal.fire({ icon: 'info', title: 'วันนี้ส่งไปแล้ว', text: 'คุณส่งข้อมูลของวันนี้ไปแล้วครับ', confirmButtonColor: '#1976D2' }).then(() => { window.location.reload(); });
+              }
+            }).catch(err => { 
+              Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: 'การเชื่อมต่อระบบล้มเหลว', confirmButtonColor: '#d33' });
+              document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
+            });
+            
+        } // end if(isConfirmed)
+      }); // end Swal.fire
     }
   </script>
 </body>
