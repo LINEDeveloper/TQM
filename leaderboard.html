@@ -141,7 +141,8 @@
       let isTeam = currentMode === 'team';
       let displayName = isTeam ? item.teamName : item.firstName;
       let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
-      let memberHtml = isTeam ? `<div class="podium-member">${item.memberCount}/5 คน</div>` : "";
+      // 🌟 อัปเดต: เปลี่ยนเป็น /4 คน
+      let memberHtml = isTeam ? `<div class="podium-member">${item.memberCount}/4 คน</div>` : "";
 
       return `
         <div class="podium-item rank-${rank}">
@@ -196,7 +197,8 @@
           let isTeam = currentMode === 'team';
           let displayName = isTeam ? item.teamName : `${item.firstName} ${item.lastName || ''}`;
           let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
-          let memberBadge = isTeam ? `<span class="member-badge">${item.memberCount}/5 คน</span>` : "";
+          // 🌟 อัปเดต: เปลี่ยนเป็น /4 คน
+          let memberBadge = isTeam ? `<span class="member-badge">${item.memberCount}/4 คน</span>` : "";
 
           const li = document.createElement('li');
           li.className = `list-item`;
@@ -219,8 +221,8 @@
         .then(res => res.json())
         .then(res => {
           if (res.status === "success") {
-            allData = res.data; // เก็บทั้งหมวด individual และ team ไว้ในตัวแปร
-            renderData(); // เรียกแสดงผลครั้งแรก (Tab บุคคล)
+            allData = res.data; 
+            renderData(); 
           } else { 
             document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; 
           }
