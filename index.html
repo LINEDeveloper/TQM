@@ -22,12 +22,14 @@
     .btn-type-team { background-color: #F57C00; }
     #status-text { text-align: center; font-size: 14px; margin-top: 15px; font-weight: 600;}
     .logo-header { text-align: center; margin-bottom: 15px; }
-    .logo-header img { max-width: 120px; height: auto; }
+    /* ปรับขนาดโลโก้ให้เหมาะสมกับรูปใหม่ */
+    .logo-header img { max-width: 150px; height: auto; }
     .profile-container { text-align: center; margin-bottom: 20px; }
     .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 15px rgba(25,118,210,0.2); background-color: #f0f0f0; display: none; margin: 0 auto 10px auto; }
     .welcome-text { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .welcome-name { color: var(--primary); font-size: 20px; font-family: 'Kanit', sans-serif; }
     .footer { text-align: center; font-size: 13px; color: var(--text-sub); margin-top: 25px; line-height: 1.6; }
+    .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
     .blue-theme-popup { border-radius: 20px !important; padding: 1.5rem !important; background-color: #F0F8FF !important; }
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
@@ -45,7 +47,7 @@
 </head>
 <body>
   <div class="card">
-    <div class="logo-header"><img src="https://www.tqmalpha.com/storage/logo/logo-tqm-blue.svg" alt="Logo"></div>
+    <div class="logo-header"><img src="https://img2.pic.in.th/tqm-og-image-removebg-preview_0.png" alt="Logo"></div>
     <h2 id="main-title">ภารกิจพิชิต 1,200 ล้านก้าว</h2>
     <div class="app-desc" id="appDescription">กิจกรรมส่งเสริมสุขภาพพนักงาน<br>กรุณากรอกยอดก้าวเดินเพื่อสะสมคะแนน</div>
     
@@ -102,7 +104,8 @@
   </div>
 
   <div class="footer">
-    บริษัท ทีคิวเอ็ม อินชัวร์รันส์ โบรคเกอร์ จำกัด
+    บริษัท ทีคิวเอ็ม อินชัวร์รันส์ โบรคเกอร์ จำกัด<br>
+    <a href="privacy.html" target="_blank">นโยบายความเป็นส่วนตัว (Privacy Policy)</a>
   </div>
 
   <script>
@@ -248,7 +251,6 @@
         return Swal.fire({ icon: 'error', title: 'ยังไม่ถึงเป้าหมาย!', text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว ✌️', confirmButtonColor: '#FF9800' });
       }
 
-      // 🌟 ดึง Pop-up ยืนยันการบันทึกข้อมูลกลับมาครอบการส่ง API
       Swal.fire({
         title: 'ยืนยันการส่งข้อมูล',
         html: '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>',
@@ -309,8 +311,8 @@
               document.getElementById('syncBtn').disabled = false; document.getElementById('status-text').innerText = ""; 
             });
             
-        } // end if(isConfirmed)
-      }); // end Swal.fire
+        } 
+      }); 
     }
   </script>
 </body>
