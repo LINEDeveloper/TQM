@@ -13,7 +13,7 @@
     .card { background: var(--card-bg); padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; box-sizing: border-box; }
     h2 { font-family: 'Kanit', sans-serif; text-align: center; color: var(--primary); margin: 0 0 5px 0; font-size: 24px;}
     .app-desc { font-size: 13px; color: var(--text-sub); text-align: center; margin-bottom: 20px; background: #F0F4F8; padding: 12px; border-radius: 8px; line-height: 1.5; }
-    input { width: 100%; padding: 14px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: border 0.3s ease; }
+    input[type="text"], input[type="number"], input[type="file"] { width: 100%; padding: 14px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: border 0.3s ease; }
     input:focus { border: 2px solid var(--primary); outline: none; }
     .input-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 5px; text-align: left; }
     .sync-btn { width: 100%; padding: 15px; color: white; background-color: var(--primary); border: none; border-radius: 10px; font-size: 16px; font-weight: 600; font-family: 'Kanit', sans-serif; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(25,118,210,0.2); }
@@ -36,8 +36,6 @@
     
     .step-alert-popup { border-radius: 30px !important; padding: 2rem !important; background-color: #F0F8FF !important; border: 3px solid #BBDEFB !important; }
     .step-alert-btn { border-radius: 50px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 35px !important; font-size: 16px !important; box-shadow: 0 4px 10px rgba(25,118,210,0.3) !important; }
-
-    /* 🌟 สไตล์พิเศษสำหรับ Pop-up บันทึกสำเร็จ (เล็ก มน ธีมฟ้า) */
     .success-alert-popup { border-radius: 30px !important; padding: 1.5rem !important; background-color: #E3F2FD !important; border: 2px solid #90CAF9 !important; width: 280px !important; box-shadow: 0 8px 20px rgba(25,118,210,0.2) !important; }
 
     .btn-gold-shine { position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4); text-decoration:none; box-sizing: border-box; display:inline-block; margin-top:10px; padding:15px; width:100%; text-align:center; font-family: 'Kanit', sans-serif; font-weight: 600; border-radius: 10px;}
@@ -91,6 +89,27 @@
         
         <label class="input-label">ค่าเฉลี่ยก้าวเดินต่อวัน (ประเมินคร่าวๆ)</label>
         <input type="number" id="avgSteps" placeholder="เช่น 5000">
+
+        <div id="weight-loss-comp-section" style="display: none; background-color: #F8F9FA; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #E0E0E0;">
+          <label class="input-label" style="color: #1565C0; font-size: 15px; margin-bottom: 10px;">🏆 ร่วมแข่งลดน้ำหนัก</label>
+          <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+            <label style="font-size: 15px; display: flex; align-items: center; gap: 5px;">
+              <input type="radio" name="weightComp" value="join" onchange="toggleWeightCompDocs()" style="width: auto; margin: 0;"> เข้าร่วม
+            </label>
+            <label style="font-size: 15px; display: flex; align-items: center; gap: 5px;">
+              <input type="radio" name="weightComp" value="not_join" onchange="toggleWeightCompDocs()" checked style="width: auto; margin: 0;"> ไม่เข้าร่วม
+            </label>
+          </div>
+          
+          <div id="weight-comp-docs" style="display: none; margin-top: 15px;">
+             <label class="input-label" style="color: #E65100;">📸 รูปที่ 1: รูปเต็มตัว</label>
+             <input type="file" id="fullBodyPic" accept="image/*">
+             
+             <label class="input-label" style="color: #E65100;">📸 รูปที่ 2: รูปด้านข้าง</label>
+             <input type="file" id="sidePic" accept="image/*">
+          </div>
+        </div>
+
       </div>
       
       <div id="daily-step-section" style="display: none;">
@@ -151,6 +170,29 @@
       document.getElementById('form-section').style.display = "block";
       document.getElementById('register-section').style.display = "block";
       document.getElementById('team-name-container').style.display = type === "team" ? "block" : "none";
+      
+      // 🌟 แสดงส่วนลงน้ำหนักเฉพาะประเภทบุคคลเท่านั้น
+      document.getElementById('weight-loss-comp-section').style.display = type === "individual" ? "block" : "none";
+    }
+
+    // 🌟 ฟังก์ชันสลับการแสดงผลอัปโหลดรูป
+    function toggleWeightCompDocs() {
+       const val = document.querySelector('input[name="weightComp"]:checked').value;
+       document.getElementById('weight-comp-docs').style.display = val === 'join' ? "block" : "none";
+    }
+
+    // 🌟 ฟังก์ชันช่วยอ่านไฟล์รูปให้เป็น Base64
+    function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({
+                data: reader.result.split(',')[1],
+                mimeType: file.type,
+                name: file.name
+            });
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
     }
 
     function buildResultHTML(steps, weight, totalSteps, submitTime, trend, userType, teamTotalSteps) {
@@ -290,6 +332,16 @@
       } else {
          if (!empIdVal || !fName || !lName || !heightVal || !weightVal || !avgStepsVal) isMissingData = true;
          if (selectedUserType === "team" && !teamNameVal) isMissingData = true;
+         
+         // 🌟 เช็คว่าถ้าเลือก "เข้าร่วม" ต้องอัปโหลดรูปทั้ง 2 รูป
+         if (selectedUserType === "individual") {
+             const compChoice = document.querySelector('input[name="weightComp"]:checked').value;
+             if (compChoice === 'join') {
+                 const file1 = document.getElementById('fullBodyPic').files[0];
+                 const file2 = document.getElementById('sidePic').files[0];
+                 if (!file1 || !file2) isMissingData = true;
+             }
+         }
       }
 
       if (isMissingData) {
@@ -297,7 +349,7 @@
           icon: 'info', 
           iconColor: '#1976D2',
           title: 'แวะก่อนน้า~ ข้อมูลยังไม่ครบ', 
-          text: 'รบกวนเช็คอีกนิดนึง กรอกข้อมูลให้ครบทุกช่องก่อนกดส่งนะค้าบ ✌️', 
+          text: 'รบกวนเช็คอีกนิดนึง กรอกข้อมูลให้ครบทุกช่อง(รวมถึงรูปภาพ) ก่อนกดส่งนะค้าบ ✌️', 
           confirmButtonText: 'โอเคจ้า',
           confirmButtonColor: '#1976D2',
           customClass: { 
@@ -335,18 +387,40 @@
         cancelButtonText: 'ยกเลิก', 
         reverseButtons: true, 
         customClass: { popup: 'blue-theme-popup', title: 'blue-theme-title', confirmButton: 'blue-theme-confirm-btn', cancelButton: 'blue-theme-confirm-btn' }
-      }).then((result) => {
+      }).then(async (result) => { // 🌟 ทำให้ทำงานแบบ async ได้
         if (result.isConfirmed) {
             
             document.getElementById('syncBtn').disabled = true;
             document.getElementById('status-text').style.color = "var(--primary)";
-            document.getElementById('status-text').innerText = "⏳ กำลังบันทึกข้อมูล...";
+            document.getElementById('status-text').innerText = "⏳ กำลังบันทึกข้อมูล (หากมีรูปภาพอาจใช้เวลาสักครู่)...";
             
             let finalTrend = 0;
             if (isRegistered) {
                finalTrend = window.userData.trend; 
                if (weightVal && parseFloat(weightVal) !== window.userData.lastKnownWeight) {
                    finalTrend = parseFloat(weightVal) - window.userData.lastKnownWeight;
+               }
+            }
+
+            // 🌟 จัดเตรียมข้อมูลรูปภาพ (ถ้ามี)
+            let weightCompData = null;
+            if (!isRegistered && selectedUserType === "individual") {
+               const compChoice = document.querySelector('input[name="weightComp"]:checked').value;
+               if (compChoice === 'join') {
+                   const file1 = document.getElementById('fullBodyPic').files[0];
+                   const file2 = document.getElementById('sidePic').files[0];
+                   try {
+                       const fbData = await readFileAsBase64(file1);
+                       const spData = await readFileAsBase64(file2);
+                       weightCompData = { join: true, file1: fbData, file2: spData };
+                   } catch (e) {
+                       Swal.fire('ผิดพลาด', 'ไม่สามารถอ่านไฟล์รูปภาพได้ กรุณาลองใหม่อีกครั้ง', 'error');
+                       document.getElementById('syncBtn').disabled = false;
+                       document.getElementById('status-text').innerText = "";
+                       return;
+                   }
+               } else {
+                   weightCompData = { join: false };
                }
             }
             
@@ -356,7 +430,8 @@
               userType: selectedUserType, teamName: teamNameVal,
               pictureUrl: savedPicUrl,
               isRegistration: !isRegistered,
-              avgSteps: avgStepsVal 
+              avgSteps: avgStepsVal,
+              weightCompData: weightCompData // 🌟 แนบข้อมูลการแข่งลดน้ำหนักไป
             };
 
             fetch(GAS_WEB_APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(payload) })
@@ -380,10 +455,9 @@
                       document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend, selectedUserType, res.teamTotalSteps);
                       document.getElementById('status-text').innerText = "";
                       
-                      // 🌟 แสดง Pop-up บันทึกสำเร็จแบบกะทัดรัด ขอบมน ธีมฟ้า
                       Swal.fire({ 
                           icon: 'success', 
-                          iconColor: '#1976D2', // เปลี่ยนสีไอคอนถูกเป็นสีฟ้า
+                          iconColor: '#1976D2',
                           title: 'บันทึกสำเร็จ', 
                           showConfirmButton: false, 
                           timer: 2000,
