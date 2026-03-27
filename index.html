@@ -35,7 +35,7 @@
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
     
-    /* สไตล์พิเศษสำหรับ Pop-up 7,000 ก้าว */
+    /* สไตล์พิเศษสำหรับ Pop-up ขอบมนพิเศษ + ธีมฟ้า */
     .step-alert-popup { border-radius: 30px !important; padding: 2rem !important; background-color: #F0F8FF !important; border: 3px solid #BBDEFB !important; }
     .step-alert-btn { border-radius: 50px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 35px !important; font-size: 16px !important; box-shadow: 0 4px 10px rgba(25,118,210,0.3) !important; }
 
@@ -205,7 +205,7 @@
           window.userData = user; 
 
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>`;
-          document.getElementById('syncBtn').innerText = "บันทึกข้อมูล"; // 🌟 กลับมาใช้คำว่าบันทึกข้อมูลเมื่อเป็นคนเก่า
+          document.getElementById('syncBtn').innerText = "บันทึกข้อมูล";
           
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
@@ -225,7 +225,6 @@
             }
           }
         } else {
-          // 🌟 อัปเดตข้อความและปุ่มสำหรับพนักงานใหม่
           document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนสมัครร่วมกิจกรรม</span>`;
           document.getElementById('type-selection-section').style.display = "block";
           document.getElementById('syncBtn').innerText = "ลงทะเบียน";
@@ -252,8 +251,21 @@
           isMissingData = true;
       }
 
+      // 🌟 ปรับ Pop-up กรอกข้อมูลไม่ครบ ให้เป็นกันเองและเป็นขอบมน ธีมสีฟ้า
       if (isMissingData) {
-        return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลให้ครบถ้วนทุกช่องครับ', confirmButtonColor: '#1976D2' });
+        return Swal.fire({ 
+          icon: 'info', 
+          iconColor: '#1976D2',
+          title: 'แวะก่อนน้า~ ข้อมูลยังไม่ครบ', 
+          text: 'รบกวนเช็คอีกนิดนึง กรอกข้อมูลให้ครบทุกช่องก่อนกดส่งนะค้าบ ✌️', 
+          confirmButtonText: 'โอเคจ้า',
+          confirmButtonColor: '#1976D2',
+          customClass: { 
+            popup: 'step-alert-popup', 
+            title: 'blue-theme-title', 
+            confirmButton: 'step-alert-btn' 
+          } 
+        });
       }
       
       const steps = parseInt(stepInput);
