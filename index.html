@@ -64,8 +64,8 @@
 
     <div id="type-selection-section" style="display: none; text-align: center; margin-bottom: 20px;">
       <h3 style="color: var(--primary); font-family: 'Kanit', sans-serif; margin-bottom: 15px;">เลือกประเภทการสมัคร</h3>
-      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">👤 สมัครประเภทบุคคล</button>
-      <button class="sync-btn btn-type-team" onclick="selectType('team')">👥 สมัครประเภททีม (4 คน)</button>
+      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">สมัครประเภทบุคคล</button>
+      <button class="sync-btn btn-type-team" onclick="selectType('team')">สมัครประเภททีม (4 คน)</button>
       <div style="font-size: 12px; color: #E65100; margin-top: 8px; font-weight: 500;">*จำนวนแค่ 50 ทีม เท่านั้น</div>
     </div>
 
@@ -109,7 +109,7 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="btn-gold-shine">🏆 ดูอันดับ</a>
+      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" id="leaderboardBtn" class="btn-gold-shine">🏆 ดูอันดับ</a>
     </div>
   </div>
 
@@ -219,13 +219,17 @@
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
+            // 🌟 แสดงปุ่ม Leaderboard ตามปกติ
+            document.getElementById('leaderboardBtn').style.display = "inline-block";
             document.getElementById('step-result').innerHTML = buildResultHTML(user.todaySteps, user.todayWeight, user.totalSteps, user.submitTime, user.trend, user.userType, user.teamTotalSteps);
           } 
           else if (user.registeredToday) {
             document.getElementById('appDescription').style.display = "none";
             document.getElementById('result-section').style.display = "block";
             
-            // 🌟 เปลี่ยนไอคอนเป็นเครื่องหมายถูกวงกลมสีเขียว
+            // 🌟 ซ่อนปุ่ม Leaderboard เฉพาะหน้าลงทะเบียนสำเร็จครั้งแรก
+            document.getElementById('leaderboardBtn').style.display = "none";
+            
             document.getElementById('step-result').innerHTML = `
               <div class="step-result-card" style="text-align: center; padding: 35px 15px;">
                 <div style="display: inline-flex; justify-content: center; align-items: center; width: 64px; height: 64px; border-radius: 50%; background-color: #4CAF50; border: 3px solid #FFFFFF; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 15px;">
@@ -371,6 +375,8 @@
                       document.getElementById("form-section").style.display = "none";
                       document.getElementById("appDescription").style.display = "none";
                       document.getElementById("result-section").style.display = "block";
+                      // 🌟 แสดงปุ่ม Leaderboard หลังจากบันทึกข้อมูลปกติสำเร็จ
+                      document.getElementById('leaderboardBtn').style.display = "inline-block";
                       document.getElementById("step-result").innerHTML = buildResultHTML(res.steps, res.weight, res.totalSteps, "", finalTrend, selectedUserType, res.teamTotalSteps);
                       document.getElementById('status-text').innerText = "";
                       Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', showConfirmButton: false, timer: 2000 });
