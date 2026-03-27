@@ -35,7 +35,7 @@
     .blue-theme-title { font-family: 'Kanit', sans-serif !important; color: #1976D2 !important; font-weight: 600 !important; font-size: 22px !important; }
     .blue-theme-confirm-btn { border-radius: 10px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 24px !important; }
     
-    /* 🌟 สไตล์พิเศษสำหรับ Pop-up 7,000 ก้าว (โค้งมนพิเศษ + ธีมฟ้า) */
+    /* สไตล์พิเศษสำหรับ Pop-up 7,000 ก้าว */
     .step-alert-popup { border-radius: 30px !important; padding: 2rem !important; background-color: #F0F8FF !important; border: 3px solid #BBDEFB !important; }
     .step-alert-btn { border-radius: 50px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 35px !important; font-size: 16px !important; box-shadow: 0 4px 10px rgba(25,118,210,0.3) !important; }
 
@@ -66,8 +66,8 @@
 
     <div id="type-selection-section" style="display: none; text-align: center; margin-bottom: 20px;">
       <h3 style="color: var(--primary); font-family: 'Kanit', sans-serif; margin-bottom: 15px;">เลือกประเภทการสมัคร</h3>
-      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">สมัครประเภทบุคคล</button>
-      <button class="sync-btn btn-type-team" onclick="selectType('team')">สมัครประเภททีม (4 คน)</button>
+      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">👤 สมัครประเภทบุคคล</button>
+      <button class="sync-btn btn-type-team" onclick="selectType('team')">👥 สมัครประเภททีม (4 คน)</button>
       <div style="font-size: 12px; color: #E65100; margin-top: 8px; font-weight: 500;">*จำนวนแค่ 50 ทีม เท่านั้น</div>
     </div>
 
@@ -205,6 +205,7 @@
           window.userData = user; 
 
           document.getElementById('welcome-text').innerHTML = `ยินดีต้อนรับ<br><span class="welcome-name">คุณ ${user.firstName} ${user.lastName}</span>`;
+          document.getElementById('syncBtn').innerText = "บันทึกข้อมูล"; // 🌟 กลับมาใช้คำว่าบันทึกข้อมูลเมื่อเป็นคนเก่า
           
           if (user.hasSubmittedToday) {
             document.getElementById('appDescription').style.display = "none";
@@ -224,8 +225,10 @@
             }
           }
         } else {
-          document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนใช้งานครั้งแรก</span>`;
+          // 🌟 อัปเดตข้อความและปุ่มสำหรับพนักงานใหม่
+          document.getElementById('welcome-text').innerHTML = `<span style="color:#28a745; font-size:16px;">ลงทะเบียนสมัครร่วมกิจกรรม</span>`;
           document.getElementById('type-selection-section').style.display = "block";
+          document.getElementById('syncBtn').innerText = "ลงทะเบียน";
         }
       } catch (error) { document.getElementById('welcome-text').innerText = "เชื่อมต่อระบบฐานข้อมูลไม่สำเร็จ"; }
     }
