@@ -49,7 +49,6 @@
       box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
     }
 
-    /* 🌟 ปรับสีพื้นหลังหน้าจอโหลดให้โปร่งใส 80% */
     #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
     .spinner { border: 6px solid #E3F2FD; border-top: 6px solid #1976D2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -373,26 +372,17 @@
         });
       }
       
+      // 🌟 เตรียมข้อความสำหรับ Pop-up ยืนยัน
+      let confirmHtml = '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>';
+      
+      // 🌟 แทรกข้อความแจ้งเตือน หากบันทึกก้าว < 7000 (ในกรณีที่ลงทะเบียนแล้วและส่งก้าวรายวัน)
       if (isRegistered && steps < 7000) {
-        return Swal.fire({ 
-          icon: 'info', 
-          iconColor: '#1976D2',
-          title: 'ยังไม่ถึงเป้าหมาย!', 
-          text: 'ยอดก้าวของคุณยังไม่ถึง 7,000 ก้าว พยายามเดินให้ถึงเป้าหมายแล้วมาส่งใหม่นะ ✌️',
-          confirmButtonText: 'ตกลง',
-          confirmButtonColor: '#1976D2',
-          customClass: { 
-            popup: 'step-alert-popup', 
-            title: 'blue-theme-title', 
-            confirmButton: 'step-alert-btn' 
-          } 
-        });
+        confirmHtml = `<div style="font-size: 16px; color: #d33; font-weight: bold; margin-bottom: 10px;">คุณ ${fName} ${lName} ยังไม่ถึง 7,000 ก้าว วันถัดไปพยายามขึ้นนะ ✌️</div>` + confirmHtml;
       }
 
       Swal.fire({
         title: 'ยืนยันการส่งข้อมูล',
-        html: '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>',
-        icon: 'info', 
+        html: confirmHtml,
         showCancelButton: true, 
         confirmButtonColor: '#1976D2', 
         cancelButtonColor: '#d33', 
