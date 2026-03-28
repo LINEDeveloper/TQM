@@ -75,8 +75,8 @@
 
     <div id="type-selection-section" style="display: none; text-align: center; margin-bottom: 20px;">
       <h3 style="color: var(--primary); font-family: 'Kanit', sans-serif; margin-bottom: 15px;">เลือกประเภทการสมัคร</h3>
-      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">สมัครประเภทบุคคล</button>
-      <button class="sync-btn btn-type-team" onclick="selectType('team')">สมัครประเภททีม (4 คน)</button>
+      <button class="sync-btn btn-type-indiv" onclick="selectType('individual')">👤 สมัครประเภทบุคคล</button>
+      <button class="sync-btn btn-type-team" onclick="selectType('team')">👥 สมัครประเภททีม (4 คน)</button>
       <div style="font-size: 12px; color: #E65100; margin-top: 8px; font-weight: 500;">*จำนวนแค่ 50 ทีม เท่านั้น</div>
     </div>
 
@@ -141,7 +141,7 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
-      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" id="leaderboardBtn" class="btn-gold-shine">🏆 ดูอันดับ</a>
+      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" id="leaderboardBtn" class="btn-gold-shine">🏆 ดูอันดับความฟิต</a>
     </div>
   </div>
 
@@ -217,6 +217,9 @@
         trendHtml = `<div style="font-size: 12px; color: #E3F2FD; margin-top: 4px; font-weight: 300;">➖ คงที่</div>`;
       }
 
+      // 🌟 เงื่อนไขใหม่: แสดงข้อความแจ้งเตือนเมื่อยอดก้าวไม่ถึง 7,000 ก้าว
+      let stepsNotCountedHtml = (steps !== null && steps !== undefined && steps < 7000) ? `<div style="font-size: 11px; color: #FFCDD2; margin-top: 4px; font-weight: 500;">ก้าวเดินไม่ถูกนำไปนับ</div>` : "";
+
       let displayTotalTitle = userType === 'team' ? "🏆 ยอดรวมสะสมทั้งหมดของทีม" : "🏆 ยอดสะสมรวมทั้งหมด";
       let displayTotalStepsText = userType === 'team' ? (teamTotalSteps ? teamTotalSteps.toLocaleString() : "0") : (totalSteps ? totalSteps.toLocaleString() : "0");
 
@@ -227,6 +230,7 @@
             <div style="text-align: center; width: 45%;">
               <div style="font-size: 32px; font-weight: bold; color: #FFFFFF; font-family: 'Kanit', sans-serif; line-height: 1;">${displaySteps}</div>
               <div style="font-size: 13px; color: #E3F2FD; margin-top: 5px;">👣 ก้าวเดิน</div>
+              ${stepsNotCountedHtml}
             </div>
             <div style="width: 1px; height: 40px; background-color: rgba(255,255,255,0.3);"></div>
             <div style="text-align: center; width: 45%;">
@@ -372,10 +376,8 @@
         });
       }
       
-      // 🌟 เตรียมข้อความสำหรับ Pop-up ยืนยัน
       let confirmHtml = '<div style="font-size: 15px; color: #555; line-height: 1.6;">ข้าพเจ้าขอยืนยันว่า <b>ข้อมูลเป็นความจริงทุกประการ</b> หากตรวจสอบพบว่าไม่ถูกต้อง กรรมการขอสงวนสิทธิ์ในการรับรางวัล</div>';
       
-      // 🌟 แทรกข้อความแจ้งเตือน หากบันทึกก้าว < 7000 (ในกรณีที่ลงทะเบียนแล้วและส่งก้าวรายวัน)
       if (isRegistered && steps < 7000) {
         confirmHtml = `<div style="font-size: 16px; color: #d33; font-weight: bold; margin-bottom: 10px;">คุณ ${fName} ${lName} ยังไม่ถึง 7,000 ก้าว วันถัดไปพยายามขึ้นนะ ✌️</div>` + confirmHtml;
       }
