@@ -38,6 +38,11 @@
     .step-alert-btn { border-radius: 50px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 35px !important; font-size: 16px !important; box-shadow: 0 4px 10px rgba(25,118,210,0.3) !important; }
     .success-alert-popup { border-radius: 30px !important; padding: 1.5rem !important; background-color: #E3F2FD !important; border: 2px solid #90CAF9 !important; width: 280px !important; box-shadow: 0 8px 20px rgba(25,118,210,0.2) !important; }
 
+    /* 🌟 เพิ่มสไตล์สำหรับ Pop-up ธีมสีแดงขอบมน (กรณีเกิน 30,000 ก้าว) */
+    .red-theme-popup { border-radius: 30px !important; padding: 2rem !important; background-color: #FFEBEE !important; border: 3px solid #FFCDD2 !important; }
+    .red-theme-title { font-family: 'Kanit', sans-serif !important; color: #D32F2F !important; font-weight: 600 !important; font-size: 22px !important; }
+    .red-theme-btn { border-radius: 50px !important; font-family: 'Kanit', sans-serif !important; padding: 12px 35px !important; font-size: 16px !important; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3) !important; background-color: #D32F2F !important; color: white !important; }
+
     .btn-gold-shine { position: relative; overflow: hidden; background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); color: #5C3A21 !important; box-shadow: 0 4px 15px rgba(243, 195, 0, 0.4); text-decoration:none; box-sizing: border-box; display:inline-block; margin-top:10px; padding:15px; width:100%; text-align:center; font-family: 'Kanit', sans-serif; font-weight: 600; border-radius: 10px;}
     
     .step-result-card {
@@ -217,7 +222,6 @@
         trendHtml = `<div style="font-size: 12px; color: #E3F2FD; margin-top: 4px; font-weight: 300;">➖ คงที่</div>`;
       }
 
-      // 🌟 เงื่อนไขใหม่: แสดงข้อความแจ้งเตือนเมื่อยอดก้าวไม่ถึง 7,000 ก้าว
       let stepsNotCountedHtml = (steps !== null && steps !== undefined && steps < 7000) ? `<div style="font-size: 11px; color: #FFCDD2; margin-top: 4px; font-weight: 500;">ก้าวเดินไม่ถูกนำไปนับ</div>` : "";
 
       let displayTotalTitle = userType === 'team' ? "🏆 ยอดรวมสะสมทั้งหมดของทีม" : "🏆 ยอดสะสมรวมทั้งหมด";
@@ -372,6 +376,23 @@
             popup: 'step-alert-popup', 
             title: 'blue-theme-title', 
             confirmButton: 'step-alert-btn' 
+          } 
+        });
+      }
+
+      // 🌟 เงื่อนไขใหม่: ป้องกันการส่งยอดก้าวเกิน 30,000 ต่อวัน (เฉพาะกรณีส่งข้อมูลรายวัน)
+      if (isRegistered && steps > 30000) {
+        return Swal.fire({ 
+          icon: 'error', 
+          iconColor: '#D32F2F',
+          title: 'ไม่สามารถบันทึกได้', 
+          text: 'พนักงานสามารถส่งได้สูงสุด 30,000 ก้าวเท่านั้นต่อวัน', 
+          confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#D32F2F',
+          customClass: { 
+            popup: 'red-theme-popup', 
+            title: 'red-theme-title', 
+            confirmButton: 'red-theme-btn' 
           } 
         });
       }
