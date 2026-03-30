@@ -26,6 +26,25 @@
     .header-title { font-family: 'Kanit', sans-serif; font-size: 26px; color: #5C3A21; margin: 0; font-weight: 600; text-shadow: 0 1px 2px rgba(255,255,255,0.5);}
     .header-sub { color:#785838; font-size: 14px; margin-top: 5px; font-weight: 500;}
 
+    /* 🌟 เพิ่มสไตล์สำหรับกล่องเป้าหมายองค์กร */
+    .grand-total-card {
+      background: linear-gradient(135deg, #1976D2, #1565C0);
+      color: white;
+      padding: 20px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
+    }
+    .grand-total-card h3 { margin: 0 0 10px 0; font-size: 16px; color: #E3F2FD; font-weight: 500; font-family: 'Sarabun', sans-serif; }
+    .progress-container { width: 100%; background-color: rgba(255,255,255,0.2); border-radius: 10px; height: 12px; margin-bottom: 12px; overflow: hidden; }
+    .progress-bar { height: 100%; background-color: #FFD54F; width: 0%; transition: width 1.5s ease-in-out; border-radius: 10px; }
+    .grand-total-numbers { font-size: 32px; font-weight: bold; font-family: 'Kanit', sans-serif; color: #FFFFFF; line-height: 1; }
+    .grand-target-text { font-size: 14px; color: #BBDEFB; margin-top: 5px; }
+
     /* 🌟 ปุ่ม Tabs สำหรับสลับประเภท */
     .tabs-container { display: flex; width: 100%; max-width: 500px; gap: 10px; margin-bottom: 20px; }
     .tab-btn { flex: 1; padding: 12px; text-align: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; border-radius: 12px; border: none; cursor: pointer; transition: 0.3s; background-color: #E0E0E0; color: #555; }
@@ -91,6 +110,15 @@
     <div class="header-sub">อันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
   </div>
 
+  <div class="grand-total-card">
+    <h3>🎯 เป้าหมายองค์กร 1,200 ล้านก้าว</h3>
+    <div class="progress-container">
+      <div class="progress-bar" id="grandProgressBar"></div>
+    </div>
+    <div class="grand-total-numbers" id="grandTotalSteps">0</div>
+    <div class="grand-target-text">จากเป้าหมาย 1,200,000,000 ก้าว</div>
+  </div>
+
   <div class="tabs-container">
     <button class="tab-btn active" id="tabIndiv" onclick="switchTab('individual')">อันดับบุคคล</button>
     <button class="tab-btn" id="tabTeam" onclick="switchTab('team')">อันดับทีม</button>
@@ -132,12 +160,10 @@
     function createPodiumHTML(item, rank) {
       let medalIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
       
-      // กรณีเป็นทีม ให้แสดงรูปไอคอนกลุ่ม และโชว์ชื่อทีม
       let isTeam = currentMode === 'team';
       let displayName = isTeam ? item.teamName : item.firstName;
       let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
-      // 🌟 อัปเดต: เปลี่ยนเป็น /4 คน
-      let memberHtml = isTeam ? `<div class="podium-member">${item.memberCount}/4 คน</div>` : "";
+      let memberHtml = isTeam ? `<div class="podium-member" style="display:block;">${item.memberCount}/4 คน</div>` : "";
 
       return `
         <div class="podium-item rank-${rank}">
@@ -165,7 +191,7 @@
       podiumContainer.innerHTML = '';
       listElement.innerHTML = '';
 
-      if (dataArr.length === 0) {
+      if (!dataArr || dataArr.length === 0) {
         document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลในหมวดหมู่นี้ 🏃‍♂️";
         document.getElementById('loading').style.display = 'block';
         return;
@@ -192,7 +218,6 @@
           let isTeam = currentMode === 'team';
           let displayName = isTeam ? item.teamName : `${item.firstName} ${item.lastName || ''}`;
           let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
-          // 🌟 อัปเดต: เปลี่ยนเป็น /4 คน
           let memberBadge = isTeam ? `<span class="member-badge">${item.memberCount}/4 คน</span>` : "";
 
           const li = document.createElement('li');
@@ -217,6 +242,21 @@
         .then(res => {
           if (res.status === "success") {
             allData = res.data; 
+            
+            // 🌟 อัปเดตเป้าหมายองค์กร
+            const grandTotal = res.data.grandTotalSteps || 0;
+            const targetSteps = 1200000000; // 1,200 ล้านก้าว
+            
+            document.getElementById('grandTotalSteps').innerText = grandTotal.toLocaleString();
+            
+            // คำนวณ % สำหรับ Progress Bar
+            let percent = (grandTotal / targetSteps) * 100;
+            if (percent > 100) percent = 100;
+            // หน่วงเวลาเล็กน้อยเพื่อให้เห็นอนิเมชันหลอดวิ่ง
+            setTimeout(() => {
+                document.getElementById('grandProgressBar').style.width = percent + "%";
+            }, 500);
+
             renderData(); 
           } else { 
             document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; 
