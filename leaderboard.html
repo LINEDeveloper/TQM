@@ -48,7 +48,8 @@
     /* 🌟 ปุ่ม Tabs สำหรับสลับประเภท */
     .tabs-container { display: flex; width: 100%; max-width: 500px; gap: 10px; margin-bottom: 20px; }
     .tab-btn { flex: 1; padding: 12px; text-align: center; font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 15px; border-radius: 12px; border: none; cursor: pointer; transition: 0.3s; background-color: #E0E0E0; color: #555; }
-    .tab-btn.active { background-color: var(--primary); color: #FFF; box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3); }
+    /* 🌟 ปรับสีปุ่ม Active ให้เป็นสีทองเดียวกับกล่อง Leaderboard */
+    .tab-btn.active { background: linear-gradient(135deg, #F3C300, #FFE65A, #F3C300); color: #5C3A21; box-shadow: 0 4px 10px rgba(243, 195, 0, 0.4); }
 
     .leaderboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; overflow: hidden; margin-bottom: 20px; padding-bottom: 10px;}
     
@@ -243,16 +244,13 @@
           if (res.status === "success") {
             allData = res.data; 
             
-            // 🌟 อัปเดตเป้าหมายองค์กร
             const grandTotal = res.data.grandTotalSteps || 0;
-            const targetSteps = 1200000000; // 1,200 ล้านก้าว
+            const targetSteps = 1200000000; 
             
             document.getElementById('grandTotalSteps').innerText = grandTotal.toLocaleString();
             
-            // คำนวณ % สำหรับ Progress Bar
             let percent = (grandTotal / targetSteps) * 100;
             if (percent > 100) percent = 100;
-            // หน่วงเวลาเล็กน้อยเพื่อให้เห็นอนิเมชันหลอดวิ่ง
             setTimeout(() => {
                 document.getElementById('grandProgressBar').style.width = percent + "%";
             }, 500);
