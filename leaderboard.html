@@ -193,7 +193,7 @@
       listElement.innerHTML = '';
 
       if (!dataArr || dataArr.length === 0) {
-        document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลในหมวดหมู่นี้ 🏃‍♂️";
+        document.getElementById('loading').innerHTML = "กำลังรอก้าวเพื่อนๆ พนักงานอยู่น้า... 🏃‍♂️";
         document.getElementById('loading').style.display = 'block';
         return;
       }
@@ -257,7 +257,7 @@
 
             renderData(); 
           } else { 
-            document.getElementById('loading').innerHTML = "ยังไม่มีข้อมูลการเดินในขณะนี้ 🏃‍♂️"; 
+            document.getElementById('loading').innerHTML = "กำลังรอก้าวเพื่อนๆ พนักงานอยู่น้า...  🏃‍♂️"; 
           }
         }).catch(err => document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล");
     }
