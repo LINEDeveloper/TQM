@@ -163,13 +163,13 @@
       
       let isTeam = currentMode === 'team';
       let displayName = isTeam ? item.teamName : item.firstName;
-      let displayPic = isTeam ? "https://cdn-icons-png.flaticon.com/512/615/615075.png" : item.picUrl;
+      let displayPic = isTeam ? "https://img1.pic.in.th/images/149071f.png" : item.picUrl;
       let memberHtml = isTeam ? `<div class="podium-member" style="display:block;">${item.memberCount}/4 คน</div>` : "";
 
       return `
         <div class="podium-item rank-${rank}">
             <div class="podium-avatar">
-                <img src="${displayPic}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                <img src="${displayPic}" onerror="this.src='https://img1.pic.in.th/images/149071f.png'">
                 <div class="podium-medal">${medalIcon}</div>
             </div>
             <div class="podium-info">
