@@ -117,7 +117,7 @@
   
   <div class="leaderboard-header-badge">
     <h1 class="header-title">🏆 Leaderboard</h1>
-    <div class="header-sub">อันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
+    <div class="header-sub" id="quarterLabelText">อันดับรวมยอดก้าวเดินสะสมสูงสุด</div>
   </div>
 
   <div class="tabs-container">
@@ -244,19 +244,19 @@
           if (res.status === "success") {
             allData = res.data; 
             
+            // 🌟 แสดงข้อความระบุเดือนของไตรมาสอัตโนมัติ
+            document.getElementById('quarterLabelText').innerText = "อันดับรวมยอดก้าวเดินสะสม " + res.data.quarterLabel;
+            
             const grandTotal = res.data.grandTotalSteps || 0;
             const targetSteps = 1200000000; 
-            
             document.getElementById('grandTotalSteps').innerText = grandTotal.toLocaleString();
-            
             let percent = (grandTotal / targetSteps) * 100;
             if (percent > 100) percent = 100;
-            setTimeout(() => {
-                document.getElementById('grandProgressBar').style.width = percent + "%";
-            }, 500);
+            setTimeout(() => { document.getElementById('grandProgressBar').style.width = percent + "%"; }, 500);
 
             renderData(); 
-          } else { 
+          } 
+          else if (res.status === "event_ended") {
             document.getElementById('loading').innerHTML = "กำลังรอก้าวเพื่อนๆ พนักงานอยู่น้า...  🏃‍♂️"; 
           }
         }).catch(err => document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล");
