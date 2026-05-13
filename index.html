@@ -57,44 +57,8 @@
     .spinner { border: 6px solid #E3F2FD; border-top: 6px solid #1976D2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .loading-text { font-family: 'Kanit', sans-serif; color: #1976D2; font-size: 18px; font-weight: 500; }
-    /* 🌟 แถบเมนูด้านล่าง (Modern 3D Glassmorphism) 🌟 */
-    body { padding-bottom: 100px; }
-    
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; width: 100%;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      box-shadow: 0 -10px 25px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6);
-      display: flex; justify-content: space-around; align-items: center;
-      padding-bottom: env(safe-area-inset-bottom);
-      z-index: 1000; border-radius: 24px 24px 0 0;
-    }
-    .nav-item {
-      flex: 1; text-align: center; padding: 14px 0; color: #B0BEC5;
-      text-decoration: none; font-family: 'Kanit', sans-serif;
-      font-weight: 500; font-size: 13px;
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-icon { font-size: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: block; }
-    
-    .nav-item.active-blue { color: #1976D2; }
-    .nav-item.active-blue .nav-icon { transform: translateY(-5px) scale(1.15); filter: drop-shadow(0 4px 6px rgba(25, 118, 210, 0.3)); }
-    
-    .nav-item.active-gold { color: #D4AF37; }
-    .nav-item.active-gold .nav-icon { transform: translateY(-5px) scale(1.15); filter: drop-shadow(0 4px 6px rgba(212, 175, 55, 0.4)); }
   </style>
 </head>
-  <div class="bottom-nav">
-    <a href="javascript:void(0);" class="nav-item active-blue">
-      <span class="nav-icon">👟</span>
-      <span>ส่งก้าว</span>
-    </a>
-    <a href="https://linedeveloper.github.io/TQM/leaderboard.html" class="nav-item">
-      <span class="nav-icon">🏆</span>
-      <span>อันดับ</span>
-    </a>
-  </div>
 <body>
   <div id="loading-overlay">
     <div class="spinner"></div>
@@ -152,6 +116,7 @@
     <div id="result-section" style="display: none; text-align: center;">
       <h3 id="result-title" style="display: none; font-family: 'Sarabun', sans-serif; font-weight: 500; color: #333; font-size: 18px; margin-bottom: 5px;"></h3>
       <div id="step-result" style="margin: 5px 0;"></div>
+      <a href="https://linedeveloper.github.io/TQM/leaderboard.html" id="leaderboardBtn" class="btn-gold-shine">🏆 ดูอันดับ</a>
     </div>
   </div>
 
